@@ -2,13 +2,13 @@
 
 ## Current Milestone
 
-M1 — Project Foundation
+M2 — Database Foundation *(Completed)*
 
 ## Milestone Status Checklist
 
 - [x] **M0 — Documentation and Architecture** *(Completed)*
 - [x] **M1 — Project Foundation** *(Frontend + Backend Scaffolding & Health Endpoint)*
-- [ ] **M2 — Database Foundation** *(PostgreSQL & Prisma Schema)*
+- [x] **M2 — Database Foundation** *(PostgreSQL 18 & Prisma Schema Migrations & Seeding)*
 - [ ] **M3 — Backend Foundation** *(Centralized Inventory Service Core)*
 - [ ] **M4 — Authentication and RBAC**
 - [ ] **M5 — Frontend Foundation**
@@ -36,11 +36,13 @@ M1 — Project Foundation
 
 ## Current Work
 
-Milestone M1 (Project Foundation) completed:
-- Root monorepo workspace configuration with npm
-- Backend Node.js + Express + TypeScript scaffolding with `/api/v1/health` endpoint
-- Frontend React 19 + Vite + TypeScript + Tailwind CSS + shadcn/ui scaffolding
-- Verified end-to-end communication via TanStack Query and Axios
+Milestone M2 (Database Foundation) completed:
+- Configured local-only PostgreSQL 18 with Prisma ORM (`@prisma/client` and `prisma` CLI).
+- Defined full 20-model Prisma schema (`prisma/schema.prisma`) matching PRD and Database design: Users, Roles, Permissions, Suppliers, Inventory Items, Transactions Ledger, Purchases, Invoices, Production Orders, BOM Items, Consumption Records, Finished Goods Yields, Sales, QR Codes, Alerts, Notifications, and Audit Logs.
+- Created and executed initial database migration `20260831141439_init_db_foundation` creating all relational tables, enums, indexes, and foreign key constraints on local database `flowfactory`.
+- Implemented and executed database seed script (`prisma/seed.ts`) seeding roles, RBAC permissions, default administrator user, sample suppliers, and initial inventory items.
+- Added singleton `PrismaClient` connection manager (`src/config/db.ts`) with query logging and graceful shutdown handlers.
+- Updated `/api/v1/health` endpoint with active `SELECT 1` ping reporting `database: "connected"`.
 
 ---
 
@@ -52,9 +54,10 @@ Milestone M1 (Project Foundation) completed:
 4. **Centralized Inventory Service:** All stock-changing modules must delegate inventory adjustments exclusively to the central service.
 5. **Invoice Line Verification:** Scanned documents default to `PURCHASE` (stock increase), requiring explicit human review and editable item mapping before ledger commitment.
 6. **Client-Agnostic REST API:** Stateless JWT authentication and uniform JSON envelopes ready for web and future Flutter mobile clients.
+7. **Database Isolation & ORM:** PostgreSQL 18 with Prisma ORM utilizing strict foreign keys, enums, and atomic `$transaction` support for centralized inventory integrity.
 
 ---
 
 ## Next Task
 
-**M2 — Database Foundation** (PostgreSQL schema definition, Prisma ORM configuration, migrations, and seed scripts).
+**M3 — Backend Foundation** (Centralized Inventory Service Core, base repositories, and transactional ledger operations).

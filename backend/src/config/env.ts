@@ -8,6 +8,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   API_PREFIX: z.string().default('/api/v1'),
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

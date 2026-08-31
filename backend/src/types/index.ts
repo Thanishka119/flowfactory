@@ -30,4 +30,6 @@ export interface HealthCheckResponse {
   timestamp: string;
   uptimeSeconds: number;
   environment: string;
+  database: 'connected' | 'disconnected';
 }
+

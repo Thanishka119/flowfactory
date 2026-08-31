@@ -1,0 +1,498 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------------------------
+// ENUMS
+// ----------------------------------------------------------------------
+
+enum RoleName {
+  ADMIN
+  PURCHASE_MANAGER
+  PRODUCTION_MANAGER
+  WAREHOUSE_STAFF
+  SALES_TEAM
+}
+
+enum InventoryItemType {
+  RAW_MATERIAL
+  COMPONENT
+  FINISHED_GOOD
+  OTHER
+}
+
+enum TransactionType {
+  PURCHASE
+  CONSUMPTION
+  PRODUCTION
+  SALE
+  ADJUSTMENT
+}
+
+enum PurchaseStatus {
+  PENDING
+  RECEIVED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  UPLOADED
+  PROCESSING
+  EXTRACTED
+  VERIFIED
+  FAILED
+}
+
+enum ProductionStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SaleStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertType {
+  LOW_STOCK
+  EXPIRY_WARNING
+  EXPIRED
+  PENDING_INVOICE
+  SHORTAGE_PREDICTION
+}
+
+enum QrEntityType {
+  INVENTORY_ITEM
+  PRODUCTION_ORDER
+  BATCH
+}
+
+// ----------------------------------------------------------------------
+// AUTHENTICATION & RBAC
+// ----------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  isActive     Boolean  @default(true) @map("is_active")
+  roleId       String   @map("role_id")
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  transactions        InventoryTransaction[]
+  purchasesReceived   Purchase[]             @relation("PurchasesReceived")
+  uploadedInvoices    Invoice[]              @relation("UploadedInvoices")
+  verifiedInvoices    Invoice[]              @relation("VerifiedInvoices")
+  productionOrders    ProductionOrder[]
+  consumptionRecords  ConsumptionRecord[]
+  sales               Sale[]
+  qrCodes             QrCode[]
+  notifications       Notification[]
+  auditLogs           AuditLog[]
+
+  @@map("users")
+}
+
+model Role {
+  id          String    @id @default(uuid())
+  name        RoleName  @unique
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  users           User[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  module      String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String     @map("role_id")
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String     @map("permission_id")
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// ----------------------------------------------------------------------
+// SUPPLIERS & INVENTORY
+// ----------------------------------------------------------------------
+
+model Supplier {
+  id            String   @id @default(uuid())
+  name          String
+  contactPerson String?  @map("contact_person")
+  email         String?
+  phone         String?
+  address       String?
+  taxId         String?  @map("tax_id")
+  leadTimeDays  Int      @default(0) @map("lead_time_days")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  inventoryItems InventoryItem[]
+  purchases      Purchase[]
+  invoices       Invoice[]
+
+  @@map("suppliers")
+}
+
+model InventoryItem {
+  id           String            @id @default(uuid())
+  sku          String            @unique
+  name         String
+  description  String?
+  category     String
+  type         InventoryItemType
+  unit         String
+  currentStock Decimal           @default(0.0000) @db.Decimal(12, 4) @map("current_stock")
+  minStock     Decimal           @default(0.0000) @db.Decimal(12, 4) @map("min_stock")
+  reorderLevel Decimal           @default(0.0000) @db.Decimal(12, 4) @map("reorder_level")
+  supplierId   String?           @map("supplier_id")
+  supplier     Supplier?         @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  expiryDate   DateTime?         @map("expiry_date")
+  isActive     Boolean           @default(true) @map("is_active")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  transactions               InventoryTransaction[]
+  purchaseItems              PurchaseItem[]
+  invoiceItems               InvoiceItem[]
+  productionOrders           ProductionOrder[]
+  productionItemRequirements ProductionItem[]
+  consumptionRecords         ConsumptionRecord[]
+  finishedGoodsYield         FinishedGood[]
+  saleItems                  SaleItem[]
+  qrCodes                    QrCode[]
+
+  @@index([sku])
+  @@index([category])
+  @@index([type])
+  @@map("inventory_items")
+}
+
+// ----------------------------------------------------------------------
+// INVENTORY TRANSACTION LEDGER (SINGLE SOURCE OF TRUTH)
+// ----------------------------------------------------------------------
+
+model InventoryTransaction {
+  id            String          @id @default(uuid())
+  itemId        String          @map("item_id")
+  item          InventoryItem   @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  type          TransactionType
+  quantity      Decimal         @db.Decimal(12, 4)
+  unitCost      Decimal?        @db.Decimal(12, 4) @map("unit_cost")
+  totalCost     Decimal?        @db.Decimal(12, 4) @map("total_cost")
+  balanceAfter  Decimal         @db.Decimal(12, 4) @map("balance_after")
+  referenceType String?         @map("reference_type")
+  referenceId   String?         @map("reference_id")
+  performedById String?         @map("performed_by_id")
+  performedBy   User?           @relation(fields: [performedById], references: [id], onDelete: SetNull)
+  notes         String?
+  createdAt     DateTime        @default(now()) @map("created_at")
+
+  @@index([itemId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([referenceType, referenceId])
+  @@map("inventory_transactions")
+}
+
+// ----------------------------------------------------------------------
+// PURCHASES & INVOICES
+// ----------------------------------------------------------------------
+
+model Purchase {
+  id             String         @id @default(uuid())
+  purchaseNumber String         @unique @map("purchase_number")
+  supplierId     String         @map("supplier_id")
+  supplier       Supplier       @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  invoiceNumber  String?        @map("invoice_number")
+  invoiceDate    DateTime?      @map("invoice_date")
+  totalAmount    Decimal        @default(0.00) @db.Decimal(12, 2) @map("total_amount")
+  status         PurchaseStatus @default(PENDING)
+  receivedById   String?        @map("received_by_id")
+  receivedBy     User?          @relation("PurchasesReceived", fields: [receivedById], references: [id], onDelete: SetNull)
+  notes          String?
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  items    PurchaseItem[]
+  invoices Invoice[]
+
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id         String        @id @default(uuid())
+  purchaseId String        @map("purchase_id")
+  purchase   Purchase      @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  itemId     String        @map("item_id")
+  item       InventoryItem @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  quantity   Decimal       @db.Decimal(12, 4)
+  unitPrice  Decimal       @db.Decimal(12, 4) @map("unit_price")
+  totalPrice Decimal       @db.Decimal(12, 2) @map("total_price")
+  createdAt  DateTime      @default(now()) @map("created_at")
+
+  @@map("purchase_items")
+}
+
+model Invoice {
+  id               String        @id @default(uuid())
+  originalFilename String        @map("original_filename")
+  storageKey       String        @map("storage_key")
+  fileUrl          String?       @map("file_url")
+  fileSize         Int           @map("file_size")
+  mimeType         String        @map("mime_type")
+  status           InvoiceStatus @default(UPLOADED)
+  ocrRawData       Json?         @map("ocr_raw_data")
+  ocrConfidence    Decimal?      @db.Decimal(5, 2) @map("ocr_confidence")
+  supplierId       String?       @map("supplier_id")
+  supplier         Supplier?     @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  invoiceNumber    String?       @map("invoice_number")
+  invoiceDate      DateTime?     @map("invoice_date")
+  totalAmount      Decimal?      @db.Decimal(12, 2) @map("total_amount")
+  uploadedById     String?       @map("uploaded_by_id")
+  uploadedBy       User?         @relation("UploadedInvoices", fields: [uploadedById], references: [id], onDelete: SetNull)
+  verifiedById     String?       @map("verified_by_id")
+  verifiedBy       User?         @relation("VerifiedInvoices", fields: [verifiedById], references: [id], onDelete: SetNull)
+  purchaseId       String?       @map("purchase_id")
+  purchase         Purchase?     @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  items InvoiceItem[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id                   String         @id @default(uuid())
+  invoiceId            String         @map("invoice_id")
+  invoice              Invoice        @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  extractedDescription String         @map("extracted_description")
+  extractedSku         String?        @map("extracted_sku")
+  quantity             Decimal        @db.Decimal(12, 4)
+  unitPrice            Decimal        @db.Decimal(12, 4) @map("unit_price")
+  totalPrice           Decimal        @db.Decimal(12, 2) @map("total_price")
+  matchedItemId        String?        @map("matched_item_id")
+  matchedItem          InventoryItem? @relation(fields: [matchedItemId], references: [id], onDelete: SetNull)
+  matchConfidence      Decimal?       @db.Decimal(5, 2) @map("match_confidence")
+  matchReason          String?        @map("match_reason")
+  isUserVerified       Boolean        @default(false) @map("is_user_verified")
+  createdAt            DateTime       @default(now()) @map("created_at")
+
+  @@map("invoice_items")
+}
+
+// ----------------------------------------------------------------------
+// PRODUCTION & CONSUMPTION
+// ----------------------------------------------------------------------
+
+model ProductionOrder {
+  id                 String           @id @default(uuid())
+  orderNumber        String           @unique @map("order_number")
+  finishedGoodItemId String           @map("finished_good_item_id")
+  finishedGoodItem   InventoryItem    @relation(fields: [finishedGoodItemId], references: [id], onDelete: Restrict)
+  plannedQuantity    Decimal          @db.Decimal(12, 4) @map("planned_quantity")
+  actualQuantity     Decimal          @default(0.0000) @db.Decimal(12, 4) @map("actual_quantity")
+  status             ProductionStatus @default(DRAFT)
+  startDate          DateTime?        @map("start_date")
+  completionDate     DateTime?        @map("completion_date")
+  createdById        String?          @map("created_by_id")
+  createdBy          User?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  notes              String?
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  // Relations
+  requiredItems      ProductionItem[]
+  consumptionRecords ConsumptionRecord[]
+  finishedGoodsYield FinishedGood[]
+
+  @@map("production_orders")
+}
+
+model ProductionItem {
+  id                String          @id @default(uuid())
+  productionOrderId String          @map("production_order_id")
+  productionOrder   ProductionOrder @relation(fields: [productionOrderId], references: [id], onDelete: Cascade)
+  itemId            String          @map("item_id")
+  item              InventoryItem   @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  requiredQuantity  Decimal         @db.Decimal(12, 4) @map("required_quantity")
+  createdAt         DateTime        @default(now()) @map("created_at")
+
+  @@map("production_items")
+}
+
+model ConsumptionRecord {
+  id                String          @id @default(uuid())
+  productionOrderId String          @map("production_order_id")
+  productionOrder   ProductionOrder @relation(fields: [productionOrderId], references: [id], onDelete: Cascade)
+  itemId            String          @map("item_id")
+  item              InventoryItem   @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  quantityConsumed  Decimal         @db.Decimal(12, 4) @map("quantity_consumed")
+  recordedById      String?         @map("recorded_by_id")
+  recordedBy        User?           @relation(fields: [recordedById], references: [id], onDelete: SetNull)
+  createdAt         DateTime        @default(now()) @map("created_at")
+
+  @@map("consumption_records")
+}
+
+model FinishedGood {
+  id                String          @id @default(uuid())
+  productionOrderId String          @map("production_order_id")
+  productionOrder   ProductionOrder @relation(fields: [productionOrderId], references: [id], onDelete: Cascade)
+  itemId            String          @map("item_id")
+  item              InventoryItem   @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  quantityProduced  Decimal         @db.Decimal(12, 4) @map("quantity_produced")
+  createdAt         DateTime        @default(now()) @map("created_at")
+
+  @@map("finished_goods")
+}
+
+// ----------------------------------------------------------------------
+// SALES
+// ----------------------------------------------------------------------
+
+model Sale {
+  id           String     @id @default(uuid())
+  saleNumber   String     @unique @map("sale_number")
+  customerName String     @map("customer_name")
+  totalAmount  Decimal    @default(0.00) @db.Decimal(12, 2) @map("total_amount")
+  status       SaleStatus @default(PENDING)
+  createdById  String?    @map("created_by_id")
+  createdBy    User?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  notes        String?
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  items SaleItem[]
+
+  @@map("sales")
+}
+
+model SaleItem {
+  id         String        @id @default(uuid())
+  saleId     String        @map("sale_id")
+  sale       Sale          @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  itemId     String        @map("item_id")
+  item       InventoryItem @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  quantity   Decimal       @db.Decimal(12, 4)
+  unitPrice  Decimal       @db.Decimal(12, 4) @map("unit_price")
+  totalPrice Decimal       @db.Decimal(12, 2) @map("total_price")
+  createdAt  DateTime      @default(now()) @map("created_at")
+
+  @@map("sale_items")
+}
+
+// ----------------------------------------------------------------------
+// QR CODES, ALERTS, NOTIFICATIONS & AUDIT LOGS
+// ----------------------------------------------------------------------
+
+model QrCode {
+  id              String         @id @default(uuid())
+  code            String         @unique
+  entityType      QrEntityType   @map("entity_type")
+  entityId        String         @map("entity_id")
+  inventoryItemId String?        @map("inventory_item_id")
+  inventoryItem   InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+  generatedById   String?        @map("generated_by_id")
+  generatedBy     User?          @relation(fields: [generatedById], references: [id], onDelete: SetNull)
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  @@map("qr_codes")
+}
+
+model Alert {
+  id         String        @id @default(uuid())
+  type       AlertType
+  severity   AlertSeverity @default(MEDIUM)
+  title      String
+  message    String
+  entityType String?       @map("entity_type")
+  entityId   String?       @map("entity_id")
+  isRead     Boolean       @default(false) @map("is_read")
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  @@index([isRead])
+  @@index([type])
+  @@map("alerts")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?  @map("entity_id")
+  details   Json?
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([action])
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
