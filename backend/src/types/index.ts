@@ -33,3 +33,4 @@ export interface HealthCheckResponse {
   database: 'connected' | 'disconnected';
 }
 
+export * from './inventory.types.js';

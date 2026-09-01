@@ -2,14 +2,14 @@
 
 ## Current Milestone
 
-M2 — Database Foundation *(Completed)*
+M3 — Backend Foundation *(Completed)*
 
 ## Milestone Status Checklist
 
 - [x] **M0 — Documentation and Architecture** *(Completed)*
 - [x] **M1 — Project Foundation** *(Frontend + Backend Scaffolding & Health Endpoint)*
 - [x] **M2 — Database Foundation** *(PostgreSQL 18 & Prisma Schema Migrations & Seeding)*
-- [ ] **M3 — Backend Foundation** *(Centralized Inventory Service Core)*
+- [x] **M3 — Backend Foundation** *(Centralized Inventory Service Core)*
 - [ ] **M4 — Authentication and RBAC**
 - [ ] **M5 — Frontend Foundation**
 - [ ] **M6 — Frontend/Backend Integration**
@@ -36,13 +36,17 @@ M2 — Database Foundation *(Completed)*
 
 ## Current Work
 
-Milestone M2 (Database Foundation) completed:
-- Configured local-only PostgreSQL 18 with Prisma ORM (`@prisma/client` and `prisma` CLI).
-- Defined full 20-model Prisma schema (`prisma/schema.prisma`) matching PRD and Database design: Users, Roles, Permissions, Suppliers, Inventory Items, Transactions Ledger, Purchases, Invoices, Production Orders, BOM Items, Consumption Records, Finished Goods Yields, Sales, QR Codes, Alerts, Notifications, and Audit Logs.
-- Created and executed initial database migration `20260831141439_init_db_foundation` creating all relational tables, enums, indexes, and foreign key constraints on local database `flowfactory`.
-- Implemented and executed database seed script (`prisma/seed.ts`) seeding roles, RBAC permissions, default administrator user, sample suppliers, and initial inventory items.
-- Added singleton `PrismaClient` connection manager (`src/config/db.ts`) with query logging and graceful shutdown handlers.
-- Updated `/api/v1/health` endpoint with active `SELECT 1` ping reporting `database: "connected"`.
+Milestone M3 (Backend Foundation) completed:
+- Implemented centralized `InventoryService` for all stock-changing operations.
+- Implemented atomic stock mutations that update `InventoryItem.currentStock` and create `InventoryTransaction` ledger entries together.
+- Established signed ledger quantities: stock increases use positive quantities and stock decreases use negative quantities.
+- Implemented negative-stock protection with explicit `allowNegativeStock` override support.
+- Added inventory domain errors for missing/inactive items, invalid quantities, insufficient stock, invalid transaction types, and transaction failures.
+- Added optional `Prisma.TransactionClient` propagation so future Purchase, Production, and Sales modules can participate in an outer database transaction.
+- Implemented stock adjustment, current-stock retrieval, paginated transaction history, and stock reconciliation.
+- Added Vitest-based automated tests covering inventory mutations, validation, signed ledger entries, balance tracking, adjustments, history, reconciliation, and transaction-client propagation.
+- Verified TypeScript with `npx tsc --noEmit` successfully.
+- Verified the Inventory Service test suite with **21/21 tests passing**.
 
 ---
 
@@ -60,4 +64,4 @@ Milestone M2 (Database Foundation) completed:
 
 ## Next Task
 
-**M3 — Backend Foundation** (Centralized Inventory Service Core, base repositories, and transactional ledger operations).
+**M4 — Authentication and RBAC**.
