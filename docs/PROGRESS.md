@@ -2,7 +2,7 @@
 
 ## Current Milestone
 
-M3 — Backend Foundation *(Completed)*
+Current Milestone: M4 — Authentication and RBAC (Completed)
 
 ## Milestone Status Checklist
 
@@ -10,7 +10,7 @@ M3 — Backend Foundation *(Completed)*
 - [x] **M1 — Project Foundation** *(Frontend + Backend Scaffolding & Health Endpoint)*
 - [x] **M2 — Database Foundation** *(PostgreSQL 18 & Prisma Schema Migrations & Seeding)*
 - [x] **M3 — Backend Foundation** *(Centralized Inventory Service Core)*
-- [ ] **M4 — Authentication and RBAC**
+- [x] **M4 — Authentication and RBAC**
 - [ ] **M5 — Frontend Foundation**
 - [ ] **M6 — Frontend/Backend Integration**
 - [ ] **M7 — Inventory Management**
