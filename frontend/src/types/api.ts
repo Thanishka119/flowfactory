@@ -21,4 +21,5 @@ export interface HealthCheckData {
   timestamp: string;
   uptimeSeconds: number;
   environment: string;
+  database?: string;
 }

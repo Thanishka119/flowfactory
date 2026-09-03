@@ -2,7 +2,7 @@
 
 ## Current Milestone
 
-Current Milestone: M5 — Frontend Foundation (Completed)
+Current Milestone: M6 — Frontend/Backend Integration (Completed)
 
 ## Milestone Status Checklist
 
@@ -12,7 +12,7 @@ Current Milestone: M5 — Frontend Foundation (Completed)
 - [x] **M3 — Backend Foundation** *(Centralized Inventory Service Core)*
 - [x] **M4 — Authentication and RBAC**
 - [x] **M5 — Frontend Foundation**
-- [ ] **M6 — Frontend/Backend Integration**
+- [x] **M6 — Frontend/Backend Integration**
 - [ ] **M7 — Inventory Management**
 - [ ] **M8 — Supplier Management**
 - [ ] **M9 — Purchase Management**
@@ -36,26 +36,28 @@ Current Milestone: M5 — Frontend Foundation (Completed)
 
 ## Current Work
 
-Milestone M5 (Frontend Foundation) completed:
+Milestone M6 (Frontend/Backend Integration) completed:
 
-- Added `src/types/auth.ts` — `AuthUser`, `LoginRequest`, `LoginResponse`, `RefreshResponse`, `MeResponse` TypeScript interfaces.
-- Added `src/services/auth.service.ts` — thin service layer over `POST /auth/login`, `POST /auth/logout`, `POST /auth/refresh`, `GET /auth/me`.
-- Added `src/lib/tokenStorage.ts` — centralised localStorage token read/write module (`ff_access_token`, `ff_refresh_token`). All token access goes through this module.
-- Updated `src/lib/api.ts` — added request interceptor (injects `Authorization: Bearer` header) and response interceptor (silent token refresh on 401, queues concurrent requests, redirects to `/login` on refresh failure).
-- Added `src/context/AuthContext.tsx` — React context providing `user`, `isAuthenticated`, `isLoading`, `login()`, `logout()`. Restores session on mount via `GET /auth/me`.
-- Added `src/hooks/useAuth.ts` — convenience hook for reading `AuthContext`.
-- Added `src/components/auth/ProtectedRoute.tsx` — route guard that shows a loading screen during session verification, redirects to `/login` if unauthenticated, renders `<Outlet />` when authenticated.
-- Added `src/components/ui/input.tsx` and `src/components/ui/label.tsx` — shadcn-style Input and Label primitives needed for the login form.
-- Added `src/pages/LoginPage.tsx` — login form with Zod validation, password show/hide toggle, loading state, error banner, and redirect guard for already-authenticated users.
-- Added `src/components/layout/Sidebar.tsx` — responsive collapsible sidebar with NavLink active-state highlighting, mobile slide-in with overlay, and "Coming soon" states for M7+ modules.
-- Added `src/components/layout/Topbar.tsx` — top bar with mobile hamburger, user name/role display, and user dropdown with logout.
-- Replaced `src/layouts/RootLayout.tsx` — full authenticated app shell (sidebar + topbar + `<Outlet />`).
-- Updated `src/routes/index.tsx` — auth-aware router: `/login` is public; all other routes are wrapped in `ProtectedRoute`; root `/` redirects to `/dashboard`.
-- Added `src/pages/DashboardPage.tsx` — M5 stub dashboard showing user name, role, and KPI placeholder cards (real data in M18).
-- Added `src/pages/NotFoundPage.tsx` — 404 page with return-to-dashboard link.
-- Updated `src/App.tsx` — wrapped app with `<AuthProvider>`.
-- Verified TypeScript: `tsc --noEmit` — **0 errors**.
-- Verified production build: `vite build` — **success** (exit code 0, no warnings related to code).
+- Verified and aligned frontend API configuration (`VITE_API_URL=http://localhost:5000/api/v1`) with backend Express routing (`PORT=5000`, `API_PREFIX=/api/v1`).
+- Verified and validated backend CORS configuration for `http://localhost:5173` with credentials and preflight OPTIONS support for `Content-Type` and `Authorization` headers.
+- Enhanced `frontend/src/lib/api.ts` response interceptor:
+  - Excluded authentication endpoints (`/auth/login`, `/auth/refresh`) from the 401 silent-refresh loop, allowing invalid credentials and auth rejection errors to return cleanly to components.
+  - Guarded against redundant `/login` browser page reloads when already on the login view, preserving form validation and error banner state.
+- Enhanced `frontend/src/lib/tokenStorage.ts` and `frontend/src/context/AuthContext.tsx`:
+  - Added user profile persistence in `tokenStorage` (`getUser()`, `setUser()`).
+  - Integrated `GET /auth/me` with cached user state during session restoration, ensuring the authenticated user's full name and role are preserved across browser refreshes without degradation.
+- Added `database?: string` to `frontend/src/types/api.ts` for full alignment with `GET /api/v1/health` response envelope.
+- Added test delegation scripts in `backend/package.json` (`"test": "vitest run"`) and root `package.json` (`"test": "npm run test --workspace=backend"`).
+- Verified full end-to-end integration against live PostgreSQL and Express backend:
+  - Real login verification with admin credentials (`POST /api/v1/auth/login`).
+  - Invalid credentials error state verification (401 without reload).
+  - Session restoration verification (`GET /api/v1/auth/me`).
+  - Silent token refresh flow (`POST /api/v1/auth/refresh`).
+  - Logout and server-side refresh token revocation (`POST /api/v1/auth/logout`).
+  - Verified rejected refresh attempt after logout.
+- Verified TypeScript across monorepo: **0 errors** in backend and frontend.
+- Verified production build across monorepo: **both backend and frontend built successfully**.
+- Verified automated backend tests: **21/21 passing**.
 
 ---
 
@@ -68,11 +70,11 @@ Milestone M5 (Frontend Foundation) completed:
 5. **Invoice Line Verification:** Scanned documents default to `PURCHASE` (stock increase), requiring explicit human review and editable item mapping before ledger commitment.
 6. **Client-Agnostic REST API:** Stateless JWT authentication and uniform JSON envelopes ready for web and future Flutter mobile clients.
 7. **Database Isolation & ORM:** PostgreSQL 18 with Prisma ORM utilising strict foreign keys, enums, and atomic `$transaction` support for centralized inventory integrity.
-8. **Token Storage:** Access token and refresh token stored in `localStorage` under `ff_access_token` / `ff_refresh_token`. All access via `tokenStorage` module. Upgrade to `httpOnly` cookies is possible in a future security hardening pass.
-9. **Auth Context:** Single `AuthContext` is the source of truth for session state. Token refresh is handled transparently by the Axios response interceptor with concurrent-request queuing.
+8. **Token Storage & Session Restoration:** Access token and refresh token stored in `localStorage` under `ff_access_token` / `ff_refresh_token`. User profile stored under `ff_user` and verified against backend `GET /auth/me` on mount.
+9. **Centralized Auth & Silent Refresh:** Transparent 401 interceptor handles silent refresh via `POST /auth/refresh` with concurrent request queuing while isolating auth endpoints from refresh loops.
 
 ---
 
 ## Next Task
 
-**M6 — Frontend/Backend Integration**
+**M7 — Inventory Management**

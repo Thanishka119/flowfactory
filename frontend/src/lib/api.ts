@@ -53,14 +53,20 @@ apiClient.interceptors.response.use(
 
     const status = error.response?.status;
 
-    // Only attempt refresh on 401 and only once per request
-    if (status === 401 && !originalRequest._retry) {
+    const isAuthEndpoint =
+      originalRequest.url?.includes('/auth/login') ||
+      originalRequest.url?.includes('/auth/refresh');
+
+    // Only attempt refresh on 401, for non-auth endpoints, and only once per request
+    if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       const refreshToken = tokenStorage.getRefreshToken();
 
-      // No refresh token available — redirect to login
+      // No refresh token available — redirect to login if not already there
       if (!refreshToken) {
         tokenStorage.clearTokens();
-        window.location.href = '/login';
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
         return Promise.reject(error);
       }
 
@@ -103,10 +109,12 @@ apiClient.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return apiClient(originalRequest);
       } catch {
-        // Refresh failed — clear tokens and redirect to login
+        // Refresh failed — clear tokens and redirect to login if not already there
         tokenStorage.clearTokens();
         refreshSubscribers = [];
-        window.location.href = '/login';
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
         return Promise.reject(error);
       } finally {
         isRefreshing = false;

@@ -76,17 +76,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const me = await authService.getMe();
 
         if (!cancelled) {
-          // Rebuild the AuthUser shape from the /me response.
-          // /me only returns userId, email, roleId — we reconstruct the
-          // minimal user object from what's available. Full profile will be
-          // fetched/enriched in later milestones.
-          setUser({
-            id: me.userId,
-            email: me.email,
-            firstName: '',
-            lastName: '',
-            role: me.roleId, // roleId until we add a /users/:id endpoint
-          });
+          // Restore cached user profile if present and matches current userId,
+          // preserving full names and role name across browser reloads.
+          const cachedUser = tokenStorage.getUser();
+          if (cachedUser && cachedUser.id === me.userId) {
+            setUser(cachedUser);
+          } else {
+            setUser({
+              id: me.userId,
+              email: me.email,
+              firstName: '',
+              lastName: '',
+              role: me.roleId,
+            });
+          }
         }
       } catch {
         // Access token invalid and refresh failed — clear everything.
@@ -114,6 +117,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const result = await authService.login(credentials);
 
     tokenStorage.setTokens(result.accessToken, result.refreshToken);
+    tokenStorage.setUser(result.user);
 
     setUser(result.user);
   }, []);
