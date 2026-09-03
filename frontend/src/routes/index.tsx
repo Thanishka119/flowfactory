@@ -1,19 +1,44 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { RootLayout } from '@/layouts/RootLayout';
-import { HomePage } from '@/pages/HomePage';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { LoginPage } from '@/pages/LoginPage';
+import { DashboardPage } from '@/pages/DashboardPage';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
+  // ----------------------------------------------------------------
+  // Public routes — accessible without authentication
+  // ----------------------------------------------------------------
   {
-    path: '/',
-    element: <RootLayout />,
+    path: '/login',
+    element: <LoginPage />,
+  },
+
+  // ----------------------------------------------------------------
+  // Protected routes — require authentication
+  // ----------------------------------------------------------------
+  {
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: '*',
-        element: <Navigate to="/" replace />,
+        path: '/',
+        element: <RootLayout />,
+        children: [
+          // Redirect root to dashboard
+          {
+            index: true,
+            element: <Navigate to="/dashboard" replace />,
+          },
+          {
+            path: 'dashboard',
+            element: <DashboardPage />,
+          },
+          // Catch-all within authenticated shell
+          {
+            path: '*',
+            element: <NotFoundPage />,
+          },
+        ],
       },
     ],
   },
