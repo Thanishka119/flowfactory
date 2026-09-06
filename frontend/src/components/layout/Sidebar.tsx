@@ -21,7 +21,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Inventory', to: '/inventory', icon: Package, comingSoon: true },
+  { label: 'Inventory', to: '/inventory', icon: Package },
   { label: 'Suppliers', to: '/suppliers', icon: Truck, comingSoon: true },
   { label: 'Purchases', to: '/purchases', icon: ShoppingCart, comingSoon: true },
   { label: 'Production', to: '/production', icon: Factory, comingSoon: true },

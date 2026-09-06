@@ -4,6 +4,12 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import {
+  InventoryListPage,
+  InventoryCreatePage,
+  InventoryDetailPage,
+  InventoryEditPage,
+} from '@/pages/inventory';
 
 export const router = createBrowserRouter([
   // ----------------------------------------------------------------
@@ -32,6 +38,23 @@ export const router = createBrowserRouter([
           {
             path: 'dashboard',
             element: <DashboardPage />,
+          },
+          // Inventory management routes (M7)
+          {
+            path: 'inventory',
+            element: <InventoryListPage />,
+          },
+          {
+            path: 'inventory/new',
+            element: <InventoryCreatePage />,
+          },
+          {
+            path: 'inventory/:id',
+            element: <InventoryDetailPage />,
+          },
+          {
+            path: 'inventory/:id/edit',
+            element: <InventoryEditPage />,
           },
           // Catch-all within authenticated shell
           {
