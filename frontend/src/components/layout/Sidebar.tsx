@@ -8,6 +8,7 @@ import {
   BarChart3,
   Layers,
   X,
+  FileText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -22,8 +23,9 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
   { label: 'Inventory', to: '/inventory', icon: Package },
-  { label: 'Suppliers', to: '/suppliers', icon: Truck, comingSoon: true },
-  { label: 'Purchases', to: '/purchases', icon: ShoppingCart, comingSoon: true },
+  { label: 'Suppliers', to: '/suppliers', icon: Truck },
+  { label: 'Purchases', to: '/purchases', icon: ShoppingCart },
+  { label: 'Invoices', to: '/invoices', icon: FileText },
   { label: 'Production', to: '/production', icon: Factory, comingSoon: true },
   { label: 'Sales', to: '/sales', icon: BarChart3, comingSoon: true },
 ];
