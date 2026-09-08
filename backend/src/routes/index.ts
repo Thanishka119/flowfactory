@@ -5,6 +5,7 @@ import inventoryRoutes from './inventory.routes.js';
 import supplierRoutes from './supplier.routes.js';
 import purchaseRoutes from './purchase.routes.js';
 import invoiceRoutes from './invoice.routes.js';
+import productionRoutes from './production.routes.js';
 
 const apiRouter = Router();
 
@@ -14,5 +15,6 @@ apiRouter.use('/inventory', inventoryRoutes);
 apiRouter.use('/suppliers', supplierRoutes);
 apiRouter.use('/purchases', purchaseRoutes);
 apiRouter.use('/invoices', invoiceRoutes);
+apiRouter.use('/production', productionRoutes);
 
 export default apiRouter;

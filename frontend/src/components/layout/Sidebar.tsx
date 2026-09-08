@@ -26,7 +26,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Suppliers', to: '/suppliers', icon: Truck },
   { label: 'Purchases', to: '/purchases', icon: ShoppingCart },
   { label: 'Invoices', to: '/invoices', icon: FileText },
-  { label: 'Production', to: '/production', icon: Factory, comingSoon: true },
+  { label: 'Production', to: '/production', icon: Factory },
   { label: 'Sales', to: '/sales', icon: BarChart3, comingSoon: true },
 ];
 

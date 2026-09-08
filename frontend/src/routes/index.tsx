@@ -26,6 +26,11 @@ import {
   InvoiceUploadPage,
   InvoiceDetailPage,
 } from '@/pages/invoices';
+import {
+  ProductionListPage,
+  ProductionCreatePage,
+  ProductionDetailPage,
+} from '@/pages/production';
 
 export const router = createBrowserRouter([
   // ----------------------------------------------------------------
@@ -114,6 +119,19 @@ export const router = createBrowserRouter([
           {
             path: 'invoices/:id',
             element: <InvoiceDetailPage />,
+          },
+          // Production management routes (M12-M13)
+          {
+            path: 'production',
+            element: <ProductionListPage />,
+          },
+          {
+            path: 'production/new',
+            element: <ProductionCreatePage />,
+          },
+          {
+            path: 'production/:id',
+            element: <ProductionDetailPage />,
           },
           // Catch-all within authenticated shell
           {
