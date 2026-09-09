@@ -416,3 +416,79 @@ export const verifyInvoice = async (req: AuthenticatedRequest, res: Response, ne
     next(error);
   }
 };
+
+export const processInvoice = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = idParamSchema.parse(req.params);
+
+    const existingInvoice = await prisma.invoice.findUnique({
+      where: { id },
+      include: { items: true },
+    });
+
+    if (!existingInvoice) {
+      return next(new AppError('Invoice not found', 404));
+    }
+
+    if (existingInvoice.status === InvoiceStatus.VERIFIED) {
+      return next(new AppError('Cannot re-process an already VERIFIED invoice', 400));
+    }
+
+    // Call OCR service abstraction
+    const { invoiceOcrService } = await import('../services/invoiceOcr.service.js');
+    const extraction = await invoiceOcrService.processInvoice(existingInvoice.originalFilename);
+
+    // Update invoice status to EXTRACTED and store extracted items
+    const updated = await prisma.$transaction(async (tx) => {
+      // If invoice already has items, remove them before populating newly extracted items
+      if (existingInvoice.items.length > 0) {
+        await tx.invoiceItem.deleteMany({ where: { invoiceId: id } });
+      }
+
+      const itemsToCreate = extraction.items.map((item) => ({
+        invoiceId: id,
+        extractedDescription: item.extractedDescription,
+        extractedSku: item.extractedSku || null,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        totalPrice: item.totalPrice || item.quantity * item.unitPrice,
+        matchedItemId: item.matchedItemId || null,
+        matchConfidence: item.matchConfidence || null,
+        matchReason: item.matchReason || null,
+        isUserVerified: false,
+      }));
+
+      await tx.invoiceItem.createMany({
+        data: itemsToCreate,
+      });
+
+      return tx.invoice.update({
+        where: { id },
+        data: {
+          status: InvoiceStatus.EXTRACTED,
+          invoiceNumber: extraction.invoiceNumber || existingInvoice.invoiceNumber,
+          invoiceDate: extraction.invoiceDate ? new Date(extraction.invoiceDate) : existingInvoice.invoiceDate,
+          totalAmount: extraction.totalAmount ?? existingInvoice.totalAmount,
+          ocrConfidence: extraction.confidence,
+          ocrRawData: { rawText: extraction.rawText },
+          supplierId: extraction.matchedSupplierId || existingInvoice.supplierId,
+        },
+        include: {
+          supplier: true,
+          purchase: true,
+          items: {
+            include: { matchedItem: true },
+          },
+        },
+      });
+    });
+
+    res.status(200).json({
+      success: true,
+      data: updated,
+      message: 'Invoice processed and items extracted successfully. Awaiting human verification.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};

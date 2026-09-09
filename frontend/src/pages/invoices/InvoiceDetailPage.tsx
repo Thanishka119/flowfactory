@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useInvoice, useVerifyInvoice } from '@/hooks/useInvoices';
+import { useInvoice, useVerifyInvoice, useProcessInvoice } from '@/hooks/useInvoices';
 import { useInventoryList } from '@/hooks/useInventory';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ export const InvoiceDetailPage = () => {
   const { data: inventoryData } = useInventoryList({ limit: 100 });
   const inventoryItems = inventoryData?.data || [];
   const verifyMutation = useVerifyInvoice();
+  const processMutation = useProcessInvoice();
 
   // Local state for matchedItemId per invoice item
   const [itemMatches, setItemMatches] = useState<Record<string, string>>({});
@@ -89,6 +90,22 @@ export const InvoiceDetailPage = () => {
           <Badge className={getStatusColor(invoice.status)}>{invoice.status}</Badge>
         </div>
         <div className="flex gap-2">
+          {invoice.status === 'UPLOADED' && (
+            <Button
+              onClick={() => {
+                setErrorMessage(null);
+                processMutation.mutate(invoice.id, {
+                  onError: (err: any) => {
+                    setErrorMessage(err?.response?.data?.message || err.message || 'Extraction failed');
+                  },
+                });
+              }}
+              disabled={processMutation.isPending}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              {processMutation.isPending ? 'Extracting Data...' : 'Run OCR & Match Items'}
+            </Button>
+          )}
           {invoice.status === 'EXTRACTED' && (
             <Button onClick={handleVerify} disabled={verifyMutation.isPending}>
               <CheckCircle className="mr-2 h-4 w-4" /> Verify Extracted Data

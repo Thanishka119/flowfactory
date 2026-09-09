@@ -54,3 +54,15 @@ export function useVerifyInvoice() {
     },
   });
 }
+
+export function useProcessInvoice() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => invoiceService.process(id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: invoiceKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: invoiceKeys.detail(id) });
+    },
+  });
+}

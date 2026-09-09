@@ -35,4 +35,9 @@ export const invoiceService = {
     const response = await apiClient.post<ApiResponse<Invoice>>(`/invoices/${id}/verify`, data);
     return response.data;
   },
+
+  process: async (id: string): Promise<ApiResponse<Invoice>> => {
+    const response = await apiClient.post<ApiResponse<Invoice>>(`/invoices/${id}/process`);
+    return response.data;
+  },
 };

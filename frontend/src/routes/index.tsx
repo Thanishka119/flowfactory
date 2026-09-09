@@ -31,6 +31,13 @@ import {
   ProductionCreatePage,
   ProductionDetailPage,
 } from '@/pages/production';
+import {
+  SaleListPage,
+  SaleCreatePage,
+  SaleDetailPage,
+} from '@/pages/sales';
+import { SimulatorPage } from '@/pages/SimulatorPage';
+import { ReportsPage } from '@/pages/ReportsPage';
 
 export const router = createBrowserRouter([
   // ----------------------------------------------------------------
@@ -132,6 +139,29 @@ export const router = createBrowserRouter([
           {
             path: 'production/:id',
             element: <ProductionDetailPage />,
+          },
+          // Sales management routes (M14-M15)
+          {
+            path: 'sales',
+            element: <SaleListPage />,
+          },
+          {
+            path: 'sales/new',
+            element: <SaleCreatePage />,
+          },
+          {
+            path: 'sales/:id',
+            element: <SaleDetailPage />,
+          },
+          // What-If Simulator & Operational Intelligence (M20-M21)
+          {
+            path: 'simulator',
+            element: <SimulatorPage />,
+          },
+          // Reports & Analytics (M16-M17)
+          {
+            path: 'reports',
+            element: <ReportsPage />,
           },
           // Catch-all within authenticated shell
           {

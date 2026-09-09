@@ -9,6 +9,8 @@ import {
   Layers,
   X,
   FileText,
+  Sparkles,
+  TrendingUp,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -27,7 +29,9 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Purchases', to: '/purchases', icon: ShoppingCart },
   { label: 'Invoices', to: '/invoices', icon: FileText },
   { label: 'Production', to: '/production', icon: Factory },
-  { label: 'Sales', to: '/sales', icon: BarChart3, comingSoon: true },
+  { label: 'Sales', to: '/sales', icon: TrendingUp },
+  { label: 'Simulator', to: '/simulator', icon: Sparkles },
+  { label: 'Reports', to: '/reports', icon: BarChart3 },
 ];
 
 interface SidebarProps {

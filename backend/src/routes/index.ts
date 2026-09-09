@@ -6,6 +6,9 @@ import supplierRoutes from './supplier.routes.js';
 import purchaseRoutes from './purchase.routes.js';
 import invoiceRoutes from './invoice.routes.js';
 import productionRoutes from './production.routes.js';
+import saleRoutes from './sale.routes.js';
+import dashboardRoutes from './dashboard.routes.js';
+import simulatorRoutes from './simulator.routes.js';
 
 const apiRouter = Router();
 
@@ -16,5 +19,8 @@ apiRouter.use('/suppliers', supplierRoutes);
 apiRouter.use('/purchases', purchaseRoutes);
 apiRouter.use('/invoices', invoiceRoutes);
 apiRouter.use('/production', productionRoutes);
+apiRouter.use('/sales', saleRoutes);
+apiRouter.use('/dashboard', dashboardRoutes);
+apiRouter.use('/simulator', simulatorRoutes);
 
 export default apiRouter;
