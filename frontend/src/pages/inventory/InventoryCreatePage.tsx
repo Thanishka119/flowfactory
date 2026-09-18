@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ArrowLeft } from 'lucide-react';
 import { useCreateInventoryItem } from '@/hooks/useInventory';
+import { useSupplierList } from '@/hooks/useSuppliers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,7 +19,7 @@ const createSchema = z.object({
   unit: z.string().min(1, 'Unit is required').max(20),
   minStock: z.coerce.number().min(0).default(0),
   reorderLevel: z.coerce.number().min(0).default(0),
-  supplierId: z.string().uuid().optional().or(z.literal('')),
+  supplierId: z.string().optional().or(z.literal('')),
   expiryDate: z.string().optional().or(z.literal('')),
 });
 
@@ -27,6 +28,7 @@ type CreateForm = z.infer<typeof createSchema>;
 export function InventoryCreatePage() {
   const navigate = useNavigate();
   const createMutation = useCreateInventoryItem();
+  const { data: suppliers = [], isLoading: isSuppliersLoading } = useSupplierList({ isActive: 'true' });
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateForm>({
     resolver: zodResolver(createSchema),
@@ -40,10 +42,16 @@ export function InventoryCreatePage() {
   async function onSubmit(data: CreateForm) {
     try {
       await createMutation.mutateAsync({
-        ...data,
-        description: data.description || undefined,
-        supplierId: data.supplierId || undefined,
-        expiryDate: data.expiryDate || undefined,
+        sku: data.sku.trim(),
+        name: data.name.trim(),
+        category: data.category.trim(),
+        type: data.type,
+        unit: data.unit.trim(),
+        minStock: Number(data.minStock) || 0,
+        reorderLevel: Number(data.reorderLevel) || 0,
+        description: data.description ? data.description.trim() : undefined,
+        supplierId: data.supplierId && data.supplierId.trim() !== '' ? data.supplierId : undefined,
+        expiryDate: data.expiryDate && data.expiryDate.trim() !== '' ? new Date(data.expiryDate).toISOString() : undefined,
       });
       navigate('/inventory');
     } catch {
@@ -129,8 +137,22 @@ export function InventoryCreatePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="supplierId">Supplier ID</Label>
-                <Input id="supplierId" {...register('supplierId')} placeholder="UUID (optional)" />
+                <Label htmlFor="supplierId">Supplier</Label>
+                <select
+                  id="supplierId"
+                  {...register('supplierId')}
+                  className="w-full h-10 rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 text-sm text-neutral-900 dark:text-white"
+                >
+                  <option value="">None (No primary supplier)</option>
+                  {suppliers.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                {isSuppliersLoading && (
+                  <p className="text-xs text-neutral-400">Loading suppliers...</p>
+                )}
                 {errors.supplierId && <p className="text-xs text-red-500">{errors.supplierId.message}</p>}
               </div>
               <div className="space-y-1.5">

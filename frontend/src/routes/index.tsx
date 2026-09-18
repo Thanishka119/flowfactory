@@ -38,6 +38,7 @@ import {
 } from '@/pages/sales';
 import { SimulatorPage } from '@/pages/SimulatorPage';
 import { ReportsPage } from '@/pages/ReportsPage';
+import { UsersPage } from '@/pages/UsersPage';
 
 export const router = createBrowserRouter([
   // ----------------------------------------------------------------
@@ -162,6 +163,11 @@ export const router = createBrowserRouter([
           {
             path: 'reports',
             element: <ReportsPage />,
+          },
+          // User Management (Admin Only)
+          {
+            path: 'users',
+            element: <UsersPage />,
           },
           // Catch-all within authenticated shell
           {

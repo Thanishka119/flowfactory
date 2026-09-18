@@ -43,6 +43,9 @@ export function errorHandler(
     code = 'VALIDATION_ERROR';
     message = 'Request validation failed';
     details = err.issues;
+  } else if (process.env.NODE_ENV === 'production') {
+    // Sanitize unexpected errors in production — never expose internal details
+    message = 'An unexpected error occurred';
   }
 
   logger.error(

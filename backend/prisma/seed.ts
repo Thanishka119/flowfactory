@@ -61,31 +61,74 @@ async function main() {
     { name: 'audit:read', module: 'audit', description: 'View immutable system audit logs' },
   ];
 
-  const permissionIds: string[] = [];
+  const permissionsMap: Record<string, string> = {};
   for (const perm of permissionsList) {
     const p = await prisma.permission.upsert({
       where: { name: perm.name },
       update: { module: perm.module, description: perm.description },
       create: perm,
     });
-    permissionIds.push(p.id);
+    permissionsMap[perm.name] = p.id;
   }
 
-  // Map all permissions to ADMIN
-  for (const permissionId of permissionIds) {
-    await prisma.rolePermission.upsert({
-      where: {
-        roleId_permissionId: {
-          roleId: rolesMap[RoleName.ADMIN],
+  // Define role permissions matrix
+  const rolePermissionsMatrix: Record<RoleName, string[]> = {
+    [RoleName.ADMIN]: permissionsList.map((p) => p.name), // All permissions
+    [RoleName.PURCHASE_MANAGER]: [
+      'inventory:read',
+      'suppliers:read',
+      'suppliers:manage',
+      'purchases:read',
+      'purchases:create',
+      'invoices:upload',
+      'invoices:verify',
+      'reports:read',
+    ],
+    [RoleName.PRODUCTION_MANAGER]: [
+      'inventory:read',
+      'inventory:create',
+      'inventory:update',
+      'inventory:adjust',
+      'production:read',
+      'production:create',
+      'production:execute',
+      'reports:read',
+    ],
+    [RoleName.WAREHOUSE_STAFF]: [
+      'inventory:read',
+      'inventory:create',
+      'inventory:update',
+      'inventory:adjust',
+      'production:read',
+      'production:execute',
+    ],
+    [RoleName.SALES_TEAM]: [
+      'inventory:read',
+      'sales:read',
+      'sales:create',
+    ],
+  };
+
+  for (const [roleName, permNames] of Object.entries(rolePermissionsMatrix)) {
+    const roleId = rolesMap[roleName as RoleName];
+    if (!roleId) continue;
+    for (const permName of permNames) {
+      const permissionId = permissionsMap[permName];
+      if (!permissionId) continue;
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId,
+            permissionId,
+          },
+        },
+        update: {},
+        create: {
+          roleId,
           permissionId,
         },
-      },
-      update: {},
-      create: {
-        roleId: rolesMap[RoleName.ADMIN],
-        permissionId,
-      },
-    });
+      });
+    }
   }
 
   // 3. Default Admin User

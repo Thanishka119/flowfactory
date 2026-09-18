@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ArrowLeft } from 'lucide-react';
 import { useInventoryItem, useUpdateInventoryItem } from '@/hooks/useInventory';
+import { useSupplierList } from '@/hooks/useSuppliers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,7 +18,7 @@ const editSchema = z.object({
   unit: z.string().min(1, 'Unit is required').max(20),
   minStock: z.coerce.number().min(0),
   reorderLevel: z.coerce.number().min(0),
-  supplierId: z.string().uuid().optional().or(z.literal('')),
+  supplierId: z.string().optional().or(z.literal('')),
   expiryDate: z.string().optional().or(z.literal('')),
 });
 
@@ -27,6 +28,7 @@ export function InventoryEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: itemResponse, isLoading } = useInventoryItem(id!);
+  const { data: suppliers = [], isLoading: isSuppliersLoading } = useSupplierList({ isActive: 'true' });
   const updateMutation = useUpdateInventoryItem();
 
   const item = itemResponse?.data;
@@ -55,10 +57,14 @@ export function InventoryEditPage() {
       await updateMutation.mutateAsync({
         id: id!,
         data: {
-          ...data,
-          description: data.description || undefined,
-          supplierId: data.supplierId || null,
-          expiryDate: data.expiryDate || null,
+          name: data.name.trim(),
+          category: data.category.trim(),
+          unit: data.unit.trim(),
+          minStock: Number(data.minStock),
+          reorderLevel: Number(data.reorderLevel),
+          description: data.description ? data.description.trim() : undefined,
+          supplierId: data.supplierId && data.supplierId.trim() !== '' ? data.supplierId : null,
+          expiryDate: data.expiryDate && data.expiryDate.trim() !== '' ? new Date(data.expiryDate).toISOString() : null,
         },
       });
       navigate(`/inventory/${id}`);
@@ -139,8 +145,22 @@ export function InventoryEditPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="supplierId">Supplier ID</Label>
-                <Input id="supplierId" {...register('supplierId')} placeholder="UUID (optional)" />
+                <Label htmlFor="supplierId">Supplier</Label>
+                <select
+                  id="supplierId"
+                  {...register('supplierId')}
+                  className="w-full h-10 rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 text-sm text-neutral-900 dark:text-white"
+                >
+                  <option value="">None (No primary supplier)</option>
+                  {suppliers.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                {isSuppliersLoading && (
+                  <p className="text-xs text-neutral-400">Loading suppliers...</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="expiryDate">Expiry Date</Label>

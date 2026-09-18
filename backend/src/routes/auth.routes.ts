@@ -7,7 +7,6 @@ import {
 } from '../controllers/auth.controller.js';
 import {
   authenticate,
-  requirePermission,
 } from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -15,11 +14,6 @@ const router = Router();
 router.post('/login', loginController);
 router.post('/refresh', refreshController);
 router.post('/logout', logoutController);
-router.get(
-  '/me',
-  authenticate,
-  requirePermission('users:read'),
-  getMe,
-);
+router.get('/me', authenticate, getMe);
 
 export default router;

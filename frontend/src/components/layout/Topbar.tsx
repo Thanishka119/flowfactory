@@ -23,11 +23,11 @@ export function Topbar({ onMenuClick }: TopbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 sm:px-6 shrink-0">
+    <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md px-4 sm:px-6 shrink-0">
       {/* Mobile hamburger */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden p-1.5 rounded-md text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        className="lg:hidden p-1.5 rounded-md text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
         aria-label="Open sidebar"
       >
         <Menu className="h-5 w-5" />
@@ -43,17 +43,17 @@ export function Topbar({ onMenuClick }: TopbarProps) {
           aria-expanded={userMenuOpen}
           aria-haspopup="true"
           className={cn(
-            'flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors',
-            'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800',
+            'flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
+            'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700',
           )}
         >
           {/* Avatar */}
-          <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <User className="h-4 w-4 text-primary" />
+          <div className="h-7 w-7 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center shrink-0">
+            <User className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
           </div>
 
           <div className="hidden sm:block text-left leading-tight">
-            <div className="font-medium text-slate-900 dark:text-white truncate max-w-[140px]">
+            <div className="font-medium text-neutral-900 dark:text-white truncate max-w-[140px]">
               {displayName}
             </div>
             {user?.role && (

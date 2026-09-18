@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { simulatorService, type ProductionSimulationResult, type SaleSimulationResult } from '@/services/simulator.service';
 import { useInventoryList } from '@/hooks/useInventory';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -10,6 +11,15 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, AlertTriangle, Factory, TrendingUp, Lightbulb } from 'lucide-react';
 
 export const SimulatorPage = () => {
+  const { user } = useAuth();
+  const userRole = user?.role?.toUpperCase();
+
+  // Roles with production:read permission
+  const canSimulateProduction = userRole === 'ADMIN' || userRole === 'PRODUCTION_MANAGER' || userRole === 'WAREHOUSE_STAFF';
+
+  // Roles with sales:read permission
+  const canSimulateSale = userRole === 'ADMIN' || userRole === 'SALES_TEAM';
+
   const [activeTab, setActiveTab] = useState<'production' | 'sale' | 'intelligence'>('production');
 
   const { data: inventoryData } = useInventoryList({ limit: 100 });
@@ -43,7 +53,7 @@ export const SimulatorPage = () => {
   });
 
   const handleSimulateProduction = async () => {
-    if (!selectedFgId) return;
+    if (!canSimulateProduction || !selectedFgId) return;
     const validMaterials = reqItems.filter((m) => m.itemId && m.requiredQuantity > 0);
     if (validMaterials.length === 0) return;
 
@@ -61,6 +71,7 @@ export const SimulatorPage = () => {
   };
 
   const handleSimulateSale = async () => {
+    if (!canSimulateSale) return;
     const validItems = saleItems.filter((i) => i.itemId && i.quantity > 0);
     if (validItems.length === 0) return;
 
@@ -194,10 +205,19 @@ export const SimulatorPage = () => {
               <Button
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white mt-4"
                 onClick={handleSimulateProduction}
-                disabled={prodLoading || !selectedFgId}
+                disabled={prodLoading || !selectedFgId || !canSimulateProduction}
               >
-                {prodLoading ? 'Calculating...' : 'Run Production Simulation'}
+                {prodLoading
+                  ? 'Calculating...'
+                  : !canSimulateProduction
+                  ? 'Production Simulation Unauthorized'
+                  : 'Run Production Simulation'}
               </Button>
+              {!canSimulateProduction && (
+                <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                  Requires Production Manager or Warehouse Staff role (production:read permission).
+                </p>
+              )}
             </CardContent>
           </Card>
 
@@ -336,10 +356,19 @@ export const SimulatorPage = () => {
               <Button
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white mt-4"
                 onClick={handleSimulateSale}
-                disabled={saleLoading}
+                disabled={saleLoading || !canSimulateSale}
               >
-                {saleLoading ? 'Calculating...' : 'Run Demand Simulation'}
+                {saleLoading
+                  ? 'Calculating...'
+                  : !canSimulateSale
+                  ? 'Demand Simulation Unauthorized'
+                  : 'Run Demand Simulation'}
               </Button>
+              {!canSimulateSale && (
+                <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                  Requires Sales Team role (sales:read permission).
+                </p>
+              )}
             </CardContent>
           </Card>
 

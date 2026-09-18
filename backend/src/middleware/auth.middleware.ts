@@ -11,7 +11,7 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export function authenticate(
+export async function authenticate(
   req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction,
@@ -39,10 +39,23 @@ export function authenticate(
       );
     }
 
+    const dbUser = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { id: true, roleId: true, email: true, isActive: true },
+    });
+
+    if (!dbUser || !dbUser.isActive) {
+      throw new AppError(
+        'User account is inactive or disabled',
+        401,
+        'ACCOUNT_INACTIVE',
+      );
+    }
+
     req.user = {
-      userId: payload.userId,
-      roleId: payload.roleId,
-      email: payload.email,
+      userId: dbUser.id,
+      roleId: dbUser.roleId,
+      email: dbUser.email,
     };
 
     next();

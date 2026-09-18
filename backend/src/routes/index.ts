@@ -9,11 +9,13 @@ import productionRoutes from './production.routes.js';
 import saleRoutes from './sale.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import simulatorRoutes from './simulator.routes.js';
+import userRoutes from './user.routes.js';
 
 const apiRouter = Router();
 
 apiRouter.use('/', healthRoutes);
 apiRouter.use('/auth', authRoutes);
+apiRouter.use('/users', userRoutes);
 apiRouter.use('/inventory', inventoryRoutes);
 apiRouter.use('/suppliers', supplierRoutes);
 apiRouter.use('/purchases', purchaseRoutes);
