@@ -22,25 +22,25 @@ type AdjustForm = z.infer<typeof adjustSchema>;
 
 function statusBadge(status: StockStatus) {
   const styles: Record<StockStatus, string> = {
-    OUT_OF_STOCK: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    LOW_STOCK: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-    NORMAL: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    OUT_OF_STOCK: 'bg-rose-50 text-rose-700 border-rose-200 font-semibold',
+    LOW_STOCK: 'bg-amber-50 text-amber-800 border-amber-300 font-semibold',
+    NORMAL: 'bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold',
   };
   const labels: Record<StockStatus, string> = {
-    OUT_OF_STOCK: 'Out of Stock', LOW_STOCK: 'Low Stock', NORMAL: 'Normal',
+    OUT_OF_STOCK: 'OUT OF STOCK', LOW_STOCK: 'LOW STOCK', NORMAL: 'NORMAL',
   };
-  return <Badge variant="outline" className={cn('text-xs', styles[status])}>{labels[status]}</Badge>;
+  return <Badge variant="outline" className={cn('text-[10px] font-mono tracking-wider', styles[status])}>{labels[status]}</Badge>;
 }
 
 function txTypeBadge(type: TransactionType) {
   const colors: Record<TransactionType, string> = {
-    PURCHASE: 'bg-emerald-100 text-emerald-800',
-    CONSUMPTION: 'bg-orange-100 text-orange-800',
-    PRODUCTION: 'bg-blue-100 text-blue-800',
-    SALE: 'bg-purple-100 text-purple-800',
-    ADJUSTMENT: 'bg-slate-100 text-slate-800',
+    PURCHASE: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+    CONSUMPTION: 'bg-orange-50 text-orange-800 border-orange-300',
+    PRODUCTION: 'bg-blue-50 text-navy border-blue-200',
+    SALE: 'bg-purple-50 text-purple-800 border-purple-300',
+    ADJUSTMENT: 'bg-cream text-navy border-bluegray/40',
   };
-  return <Badge variant="outline" className={cn('text-xs', colors[type])}>{type}</Badge>;
+  return <Badge variant="outline" className={cn('text-[10px] font-mono uppercase tracking-wider', colors[type])}>{type}</Badge>;
 }
 
 export function InventoryDetailPage() {
@@ -87,14 +87,14 @@ export function InventoryDetailPage() {
   }
 
   if (isLoading) {
-    return <div className="flex items-center justify-center py-12 text-sm text-slate-500">Loading...</div>;
+    return <div className="flex items-center justify-center py-16 text-xs font-mono uppercase tracking-wider text-navy/60">Loading item specifications...</div>;
   }
 
   if (isError || !item) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 gap-2">
-        <p className="text-sm text-red-500">Failed to load inventory item</p>
-        <Button variant="outline" onClick={() => navigate('/inventory')}>Back to Inventory</Button>
+      <div className="flex flex-col items-center justify-center py-16 gap-3 bg-white border border-bluegray/40 rounded-lg p-6">
+        <p className="text-xs font-semibold text-rose-600">Failed to load inventory item</p>
+        <Button variant="outline" className="border-bluegray/40 text-navy text-xs font-semibold" onClick={() => navigate('/inventory')}>Back to Inventory</Button>
       </div>
     );
   }
@@ -102,29 +102,31 @@ export function InventoryDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-lg border border-bluegray/40 shadow-sm">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/inventory')}>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/inventory')} className="text-navy hover:bg-cream/40">
             <ArrowLeft className="h-4 w-4 mr-1" />Back
           </Button>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{item.name}</h1>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-2xl font-bold tracking-tight text-navy">{item.name}</h1>
               {statusBadge(item.stockStatus)}
-              {!item.isActive && <Badge variant="outline" className="bg-slate-100 text-slate-500 text-xs">Inactive</Badge>}
+              {!item.isActive && <Badge variant="outline" className="bg-bluegray/10 text-navy/50 border-bluegray/40 text-[10px] font-mono">Inactive</Badge>}
             </div>
-            <p className="text-sm text-slate-500 font-mono">{item.sku}</p>
+            <p className="text-xs text-bluegray-dark font-mono mt-0.5">SKU: {item.sku}</p>
           </div>
         </div>
         <div className="flex gap-2">
           <Link to={`/inventory/${item.id}/edit`}>
-            <Button variant="outline" size="sm"><Edit className="h-4 w-4 mr-1" />Edit</Button>
+            <Button variant="outline" size="sm" className="border-bluegray/50 hover:bg-cream/40 text-navy text-xs font-semibold">
+              <Edit className="h-3.5 w-3.5 mr-1" />Edit Item
+            </Button>
           </Link>
           {item.isActive && (
             <Button variant="outline" size="sm" onClick={handleDeactivate}
               disabled={deactivateMutation.isPending}
-              className="text-red-600 hover:text-red-700">
-              <Ban className="h-4 w-4 mr-1" />Deactivate
+              className="text-rose-600 border-rose-200 hover:bg-rose-50 text-xs font-semibold">
+              <Ban className="h-3.5 w-3.5 mr-1" />Deactivate
             </Button>
           )}
         </div>
@@ -132,60 +134,60 @@ export function InventoryDetailPage() {
 
       {/* Info Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 flex items-center gap-2">
-              <Package className="h-4 w-4" />Item Information
+        <Card className="border border-bluegray/40 bg-white shadow-sm">
+          <CardHeader className="border-b border-bluegray/20 pb-3">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-navy/70 flex items-center gap-2">
+              <Package className="h-4 w-4 text-navy" />Item Specifications
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            <div className="flex justify-between"><span className="text-slate-500">Type</span><span>{item.type.replace('_', ' ')}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Category</span><span>{item.category}</span></div>
-            <div className="flex justify-between"><span className="text-slate-500">Unit</span><span>{item.unit}</span></div>
-            {item.description && <div className="flex justify-between"><span className="text-slate-500">Description</span><span className="text-right max-w-[60%]">{item.description}</span></div>}
-            {item.expiryDate && <div className="flex justify-between"><span className="text-slate-500">Expiry</span><span>{new Date(item.expiryDate).toLocaleDateString()}</span></div>}
+          <CardContent className="space-y-3 pt-4 text-xs">
+            <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Type</span><span className="font-semibold text-navy">{item.type.replace('_', ' ')}</span></div>
+            <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Category</span><span className="font-semibold text-navy">{item.category}</span></div>
+            <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Measurement Unit</span><span className="font-mono font-semibold text-navy">{item.unit}</span></div>
+            {item.description && <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Description</span><span className="text-right max-w-[60%] font-medium text-navy">{item.description}</span></div>}
+            {item.expiryDate && <div className="flex justify-between"><span className="text-navy/60 font-medium">Expiration Date</span><span className="font-mono font-semibold text-navy">{new Date(item.expiryDate).toLocaleDateString()}</span></div>}
           </CardContent>
         </Card>
 
         {item.supplier && (
-          <Card className="border-slate-200 dark:border-slate-800">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-500 flex items-center gap-2">
-                <Truck className="h-4 w-4" />Supplier
+          <Card className="border border-bluegray/40 bg-white shadow-sm">
+            <CardHeader className="border-b border-bluegray/20 pb-3">
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-navy/70 flex items-center gap-2">
+                <Truck className="h-4 w-4 text-navy" />Primary Supplier Link
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-slate-500">Name</span><span className="font-medium">{item.supplier.name}</span></div>
-              {item.supplier.contactPerson && <div className="flex justify-between"><span className="text-slate-500">Contact</span><span>{item.supplier.contactPerson}</span></div>}
-              {item.supplier.email && <div className="flex justify-between"><span className="text-slate-500">Email</span><span>{item.supplier.email}</span></div>}
-              {item.supplier.phone && <div className="flex justify-between"><span className="text-slate-500">Phone</span><span>{item.supplier.phone}</span></div>}
+            <CardContent className="space-y-3 pt-4 text-xs">
+              <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Supplier Name</span><span className="font-semibold text-navy">{item.supplier.name}</span></div>
+              {item.supplier.contactPerson && <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Key Contact</span><span className="font-medium text-navy">{item.supplier.contactPerson}</span></div>}
+              {item.supplier.email && <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Email</span><span className="font-mono text-navy">{item.supplier.email}</span></div>}
+              {item.supplier.phone && <div className="flex justify-between"><span className="text-navy/60 font-medium">Phone</span><span className="font-mono text-navy">{item.supplier.phone}</span></div>}
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Stock Card */}
-      <Card className="border-slate-200 dark:border-slate-800">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-slate-500">Stock Information</CardTitle>
+      {/* Stock Summary Card */}
+      <Card className="border border-bluegray/40 bg-white shadow-sm">
+        <CardHeader className="border-b border-bluegray/20 pb-3">
+          <CardTitle className="text-xs font-bold uppercase tracking-wider text-navy/70">Stock Level Metrics</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div>
-              <p className="text-xs text-slate-500">Current Stock</p>
-              <p className="text-2xl font-bold font-mono">{parseFloat(item.currentStock).toLocaleString()}</p>
+            <div className="p-3 bg-cream/30 rounded border border-bluegray/20">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-navy/60">Current Stock</p>
+              <p className="text-2xl font-bold font-mono text-navy mt-1">{parseFloat(item.currentStock).toLocaleString()} <span className="text-xs text-navy/60 font-sans">{item.unit}</span></p>
             </div>
-            <div>
-              <p className="text-xs text-slate-500">Min Stock</p>
-              <p className="text-lg font-mono">{parseFloat(item.minStock).toLocaleString()}</p>
+            <div className="p-3 bg-cream/30 rounded border border-bluegray/20">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-navy/60">Min Stock Floor</p>
+              <p className="text-lg font-bold font-mono text-navy mt-1">{parseFloat(item.minStock).toLocaleString()} <span className="text-xs text-navy/60 font-sans">{item.unit}</span></p>
             </div>
-            <div>
-              <p className="text-xs text-slate-500">Reorder Level</p>
-              <p className="text-lg font-mono">{parseFloat(item.reorderLevel).toLocaleString()}</p>
+            <div className="p-3 bg-cream/30 rounded border border-bluegray/20">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-navy/60">Reorder Threshold</p>
+              <p className="text-lg font-bold font-mono text-navy mt-1">{parseFloat(item.reorderLevel).toLocaleString()} <span className="text-xs text-navy/60 font-sans">{item.unit}</span></p>
             </div>
-            <div>
-              <p className="text-xs text-slate-500">Status</p>
-              <div className="mt-1">{statusBadge(item.stockStatus)}</div>
+            <div className="p-3 bg-cream/30 rounded border border-bluegray/20">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-navy/60">Inventory Status</p>
+              <div className="mt-2">{statusBadge(item.stockStatus)}</div>
             </div>
           </div>
         </CardContent>
@@ -193,36 +195,36 @@ export function InventoryDetailPage() {
 
       {/* Stock Adjustment */}
       {item.isActive && (
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Manual Stock Adjustment</CardTitle>
-            <CardDescription>Positive value to increase, negative to decrease stock</CardDescription>
+        <Card className="border border-bluegray/40 bg-white shadow-sm">
+          <CardHeader className="border-b border-bluegray/20 pb-3">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-navy/70">Manual Stock Ledger Adjustment</CardTitle>
+            <CardDescription className="text-xs text-navy/60">Positive value to increment stock, negative value to write off/decrement</CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onAdjust)} className="space-y-3">
+          <CardContent className="pt-4">
+            <form onSubmit={handleSubmit(onAdjust)} className="space-y-4">
               {adjustSuccess && (
-                <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-sm p-3 rounded-md">
+                <div className="bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs p-3 rounded-md font-mono">
                   {adjustSuccess}
                 </div>
               )}
               {adjustMutation.isError && (
-                <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm p-3 rounded-md">
+                <div className="bg-rose-50 border border-rose-300 text-rose-700 text-xs p-3 rounded-md">
                   {adjustMutation.error?.message || 'Adjustment failed'}
                 </div>
               )}
-              <div className="flex flex-wrap gap-3 items-end">
-                <div className="space-y-1.5 w-32">
-                  <Label htmlFor="quantityDelta">Delta</Label>
-                  <Input id="quantityDelta" type="number" step="any" {...register('quantityDelta')} placeholder="e.g. 10 or -5" />
-                  {errors.quantityDelta && <p className="text-xs text-red-500">{errors.quantityDelta.message}</p>}
+              <div className="flex flex-wrap gap-4 items-end">
+                <div className="space-y-1.5 w-36">
+                  <Label htmlFor="quantityDelta" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Quantity Delta</Label>
+                  <Input id="quantityDelta" type="number" step="any" {...register('quantityDelta')} placeholder="e.g. +10 or -5" className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
+                  {errors.quantityDelta && <p className="text-[10px] text-rose-600 font-semibold">{errors.quantityDelta.message}</p>}
                 </div>
-                <div className="space-y-1.5 flex-1 min-w-[200px]">
-                  <Label htmlFor="notes">Reason / Notes</Label>
-                  <Input id="notes" {...register('notes')} placeholder="Reason for adjustment" />
-                  {errors.notes && <p className="text-xs text-red-500">{errors.notes.message}</p>}
+                <div className="space-y-1.5 flex-1 min-w-[220px]">
+                  <Label htmlFor="notes" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Reason / Audit Trail Note</Label>
+                  <Input id="notes" {...register('notes')} placeholder="Mandatory audit justification" className="bg-white border-bluegray/50 focus:border-navy text-xs" />
+                  {errors.notes && <p className="text-[10px] text-rose-600 font-semibold">{errors.notes.message}</p>}
                 </div>
-                <Button type="submit" disabled={adjustMutation.isPending}>
-                  {adjustMutation.isPending ? 'Adjusting...' : 'Adjust Stock'}
+                <Button type="submit" disabled={adjustMutation.isPending} className="bg-navy hover:bg-navy-dark text-white text-xs font-semibold">
+                  {adjustMutation.isPending ? 'Committing...' : 'Commit Adjustment'}
                 </Button>
               </div>
             </form>
@@ -231,41 +233,41 @@ export function InventoryDetailPage() {
       )}
 
       {/* Transaction History */}
-      <Card className="border-slate-200 dark:border-slate-800">
-        <CardHeader>
-          <CardTitle className="text-sm font-medium text-slate-500">Transaction History</CardTitle>
+      <Card className="border border-bluegray/40 bg-white overflow-hidden shadow-sm">
+        <CardHeader className="border-b border-bluegray/20 pb-3 bg-cream/20">
+          <CardTitle className="text-xs font-bold uppercase tracking-wider text-navy/70">Inventory Transaction Audit Trail</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {transactions.length === 0 ? (
-            <div className="py-8 text-center text-sm text-slate-500">No transactions recorded</div>
+            <div className="py-12 text-center text-xs font-medium text-navy/50">No transaction logs recorded for this item</div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-700">
-                    <th className="text-left py-2 px-4 font-medium text-slate-500">Date</th>
-                    <th className="text-left py-2 px-4 font-medium text-slate-500">Type</th>
-                    <th className="text-right py-2 px-4 font-medium text-slate-500">Qty</th>
-                    <th className="text-right py-2 px-4 font-medium text-slate-500">Balance After</th>
-                    <th className="text-left py-2 px-4 font-medium text-slate-500">Reference</th>
-                    <th className="text-left py-2 px-4 font-medium text-slate-500">By</th>
-                    <th className="text-left py-2 px-4 font-medium text-slate-500">Notes</th>
+                  <tr className="border-b border-bluegray/30 bg-cream/40">
+                    <th className="text-left py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Timestamp</th>
+                    <th className="text-left py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Event Type</th>
+                    <th className="text-right py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Delta</th>
+                    <th className="text-right py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Balance After</th>
+                    <th className="text-left py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Reference</th>
+                    <th className="text-left py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Authorized By</th>
+                    <th className="text-left py-3 px-4 font-semibold uppercase tracking-wider text-navy/70 text-[11px]">Audit Notes</th>
                   </tr>
                 </thead>
                 <tbody>
                   {transactions.map((tx) => (
-                    <tr key={tx.id} className="border-b border-slate-100 dark:border-slate-800">
-                      <td className="py-2 px-4 text-xs text-slate-600">{new Date(tx.createdAt).toLocaleString()}</td>
-                      <td className="py-2 px-4">{txTypeBadge(tx.type)}</td>
-                      <td className={cn('py-2 px-4 text-right font-mono', parseFloat(tx.quantity) >= 0 ? 'text-green-600' : 'text-red-600')}>
+                    <tr key={tx.id} className="border-b border-bluegray/15 hover:bg-cream/20 transition-colors">
+                      <td className="py-2.5 px-4 font-mono text-[11px] text-navy/70">{new Date(tx.createdAt).toLocaleString()}</td>
+                      <td className="py-2.5 px-4">{txTypeBadge(tx.type)}</td>
+                      <td className={cn('py-2.5 px-4 text-right font-mono font-bold', parseFloat(tx.quantity) >= 0 ? 'text-emerald-700' : 'text-rose-600')}>
                         {parseFloat(tx.quantity) >= 0 ? '+' : ''}{parseFloat(tx.quantity).toLocaleString()}
                       </td>
-                      <td className="py-2 px-4 text-right font-mono">{parseFloat(tx.balanceAfter).toLocaleString()}</td>
-                      <td className="py-2 px-4 text-xs text-slate-500">{tx.referenceType || '—'}</td>
-                      <td className="py-2 px-4 text-xs text-slate-600">
+                      <td className="py-2.5 px-4 text-right font-mono font-semibold text-navy">{parseFloat(tx.balanceAfter).toLocaleString()}</td>
+                      <td className="py-2.5 px-4 text-[11px] font-mono text-navy/60">{tx.referenceType || '—'}</td>
+                      <td className="py-2.5 px-4 text-navy/80 font-medium">
                         {tx.performedBy ? `${tx.performedBy.firstName} ${tx.performedBy.lastName}` : '—'}
                       </td>
-                      <td className="py-2 px-4 text-xs text-slate-500 max-w-[150px] truncate">{tx.notes || '—'}</td>
+                      <td className="py-2.5 px-4 text-navy/60 max-w-[180px] truncate">{tx.notes || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -273,11 +275,11 @@ export function InventoryDetailPage() {
             </div>
           )}
           {txMeta && txMeta.totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 dark:border-slate-700">
-              <span className="text-xs text-slate-500">Page {txMeta.page} of {txMeta.totalPages}</span>
+            <div className="flex items-center justify-between px-4 py-3 border-t border-bluegray/20 bg-cream/10">
+              <span className="text-xs font-mono text-navy/60">Page {txMeta.page} of {txMeta.totalPages}</span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" disabled={txMeta.page <= 1} onClick={() => setTxPage(txMeta.page - 1)}>Prev</Button>
-                <Button variant="outline" size="sm" disabled={txMeta.page >= txMeta.totalPages} onClick={() => setTxPage(txMeta.page + 1)}>Next</Button>
+                <Button variant="outline" size="sm" className="border-bluegray/40 text-navy text-xs" disabled={txMeta.page <= 1} onClick={() => setTxPage(txMeta.page - 1)}>Prev</Button>
+                <Button variant="outline" size="sm" className="border-bluegray/40 text-navy text-xs" disabled={txMeta.page >= txMeta.totalPages} onClick={() => setTxPage(txMeta.page + 1)}>Next</Button>
               </div>
             </div>
           )}

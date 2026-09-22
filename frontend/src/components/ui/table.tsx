@@ -1,4 +1,4 @@
-﻿import * as React from 'react';
+import * as React from 'react';
 
 export const Table = React.forwardRef<
   HTMLTableElement,
@@ -20,7 +20,7 @@ export const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={`border-b ${className ?? ''}`}
+    className={`border-b border-bluegray/40 bg-cream/40 ${className ?? ''}`}
     {...props}
   />
 ));
@@ -32,7 +32,7 @@ export const TableBody = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={`[&_tr:last-child]:border-0 ${className ?? ''}`}
+    className={`divide-y divide-bluegray/20 bg-white ${className ?? ''}`}
     {...props}
   />
 ));
@@ -44,7 +44,7 @@ export const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={`border-t bg-gray-50 font-medium ${className ?? ''}`}
+    className={`border-t border-bluegray/40 bg-cream/50 font-medium text-navy ${className ?? ''}`}
     {...props}
   />
 ));
@@ -56,7 +56,7 @@ export const TableRow = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tr
     ref={ref}
-    className={`border-b transition-colors hover:bg-gray-50 ${className ?? ''}`}
+    className={`transition-colors hover:bg-cream-light/70 ${className ?? ''}`}
     {...props}
   />
 ));
@@ -68,7 +68,7 @@ export const TableHead = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <th
     ref={ref}
-    className={`h-12 px-4 text-left align-middle font-medium text-gray-500 ${className ?? ''}`}
+    className={`h-10 px-3.5 text-left align-middle text-xs font-semibold uppercase tracking-wider text-navy/70 ${className ?? ''}`}
     {...props}
   />
 ));
@@ -80,7 +80,7 @@ export const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={`p-4 align-middle ${className ?? ''}`}
+    className={`px-3.5 py-3 align-middle text-sm text-navy ${className ?? ''}`}
     {...props}
   />
 ));

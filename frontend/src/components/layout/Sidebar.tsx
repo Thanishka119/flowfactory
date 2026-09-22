@@ -13,6 +13,7 @@ import {
   Sparkles,
   TrendingUp,
   Users,
+  ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -21,64 +22,73 @@ interface NavItem {
   to: string;
   icon: React.ComponentType<{ className?: string }>;
   allowedRoles?: string[];
-  comingSoon?: boolean;
+  group: 'OVERVIEW' | 'OPERATIONS' | 'INTELLIGENCE' | 'ADMINISTRATION';
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard }, // Accessible to all roles
+  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard, group: 'OVERVIEW' },
   {
     label: 'Inventory',
     to: '/inventory',
     icon: Package,
     allowedRoles: ['ADMIN', 'PURCHASE_MANAGER', 'PRODUCTION_MANAGER', 'WAREHOUSE_STAFF', 'SALES_TEAM'],
+    group: 'OPERATIONS',
   },
   {
     label: 'Suppliers',
     to: '/suppliers',
     icon: Truck,
     allowedRoles: ['ADMIN', 'PURCHASE_MANAGER'],
+    group: 'OPERATIONS',
   },
   {
     label: 'Purchases',
     to: '/purchases',
     icon: ShoppingCart,
     allowedRoles: ['ADMIN', 'PURCHASE_MANAGER'],
+    group: 'OPERATIONS',
   },
   {
     label: 'Invoices',
     to: '/invoices',
     icon: FileText,
     allowedRoles: ['ADMIN', 'PURCHASE_MANAGER'],
+    group: 'OPERATIONS',
   },
   {
     label: 'Production',
     to: '/production',
     icon: Factory,
     allowedRoles: ['ADMIN', 'PRODUCTION_MANAGER', 'WAREHOUSE_STAFF'],
+    group: 'OPERATIONS',
   },
   {
     label: 'Sales',
     to: '/sales',
     icon: TrendingUp,
     allowedRoles: ['ADMIN', 'SALES_TEAM'],
+    group: 'OPERATIONS',
   },
   {
     label: 'Simulator',
     to: '/simulator',
     icon: Sparkles,
     allowedRoles: ['ADMIN', 'PRODUCTION_MANAGER', 'PURCHASE_MANAGER', 'SALES_TEAM'],
+    group: 'INTELLIGENCE',
   },
   {
     label: 'Reports',
     to: '/reports',
     icon: BarChart3,
     allowedRoles: ['ADMIN', 'PURCHASE_MANAGER', 'PRODUCTION_MANAGER'],
+    group: 'INTELLIGENCE',
   },
   {
     label: 'Users',
     to: '/users',
     icon: Users,
     allowedRoles: ['ADMIN'],
+    group: 'ADMINISTRATION',
   },
 ];
 
@@ -92,20 +102,24 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const userRole = user?.role?.toUpperCase();
 
   const visibleNavItems = NAV_ITEMS.filter((item) => {
-    // If no allowedRoles specified, visible to all authenticated users
     if (!item.allowedRoles) return true;
-    // Admins have access to everything
     if (userRole === 'ADMIN') return true;
-    // Otherwise check if the user's role is in the allowed list
     return Boolean(userRole && item.allowedRoles.includes(userRole));
   });
+
+  const groups = ['OVERVIEW', 'OPERATIONS', 'INTELLIGENCE', 'ADMINISTRATION'] as const;
+
+  const displayName =
+    user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.email ?? 'Operator';
 
   return (
     <>
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-30 bg-[#252A40]/70 backdrop-blur-xs lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -114,26 +128,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar panel */}
       <aside
         className={cn(
-          // Base
-          'fixed inset-y-0 left-0 z-40 flex flex-col w-60 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 transition-transform duration-200 ease-in-out',
-          // Desktop: always visible
+          'fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-[#2F344F] border-r border-[#252A40] text-[#ACBAC4] transition-transform duration-200 ease-in-out shadow-xl lg:shadow-none',
           'lg:translate-x-0 lg:static lg:z-auto',
-          // Mobile: slide in/out
           isOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        {/* Brand */}
-        <div className="flex h-16 items-center justify-between px-4 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-md bg-neutral-900 dark:bg-neutral-100 flex items-center justify-center text-white dark:text-neutral-900 shadow-sm">
-              <Layers className="h-4.5 w-4.5" />
+        {/* Brand Header */}
+        <div className="flex h-16 items-center justify-between px-5 border-b border-[#252A40] shrink-0 bg-[#252A40]/40">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-md bg-[#E5DCC0] flex items-center justify-center text-[#2F344F] shadow-sm font-bold">
+              <Layers className="h-5 w-5 text-[#2F344F]" />
             </div>
             <div>
-              <span className="text-base font-bold tracking-tight text-neutral-900 dark:text-white">
-                Flow<span className="text-neutral-500">Factory</span>
+              <span className="text-sm font-bold tracking-tight text-white flex items-center">
+                FLOW<span className="text-[#E5DCC0]">FACTORY</span>
               </span>
-              <span className="block text-[9px] font-semibold uppercase tracking-wider text-neutral-400">
-                Operations & Inventory
+              <span className="block text-[8.5px] font-mono font-semibold uppercase tracking-widest text-[#ACBAC4]/80">
+                Operations Ledger
               </span>
             </div>
           </div>
@@ -141,58 +152,70 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Mobile close button */}
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-md text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            className="lg:hidden p-1.5 rounded-md text-[#ACBAC4] hover:text-white hover:bg-[#252A40] transition-colors"
             aria-label="Close sidebar"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto p-3 space-y-0.5" aria-label="Main navigation">
-          {visibleNavItems.map((item) => {
-            const Icon = item.icon;
-
-            if (item.comingSoon) {
-              return (
-                <div
-                  key={item.to}
-                  className="flex items-center gap-3 px-3 py-2 rounded-md text-neutral-400 dark:text-neutral-600 cursor-not-allowed select-none text-sm"
-                  title="Coming soon"
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  <span className="flex-1 truncate">{item.label}</span>
-                  <span className="text-[9px] font-medium uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-400 rounded px-1.5 py-0.5">
-                    Soon
-                  </span>
-                </div>
-              );
-            }
+        {/* Grouped Navigation */}
+        <nav className="flex-1 overflow-y-auto px-3.5 py-4 space-y-5" aria-label="Main navigation">
+          {groups.map((grp) => {
+            const itemsInGroup = visibleNavItems.filter((item) => item.group === grp);
+            if (itemsInGroup.length === 0) return null;
 
             return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={() => { if (isOpen) onClose(); }}
-                className={({ isActive }) =>
-                  cn(
-                    'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-950 font-semibold shadow-xs'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white',
-                  )
-                }
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span className="truncate">{item.label}</span>
-              </NavLink>
+              <div key={grp} className="space-y-1">
+                <div className="px-3 py-1 text-[10px] font-mono font-bold tracking-wider text-[#ACBAC4]/60 uppercase">
+                  {grp}
+                </div>
+
+                {itemsInGroup.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => { if (isOpen) onClose(); }}
+                      className={({ isActive }) =>
+                        cn(
+                          'flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium transition-all duration-150',
+                          isActive
+                            ? 'bg-[#E5DCC0] text-[#2F344F] font-semibold shadow-xs'
+                            : 'text-[#ACBAC4] hover:bg-[#252A40] hover:text-white',
+                        )
+                      }
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{item.label}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
             );
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="shrink-0 px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 text-[10px] text-neutral-400 font-mono">
-          FlowFactory v1.0.0
+        {/* User / Profile Footer */}
+        <div className="shrink-0 p-3.5 border-t border-[#252A40] bg-[#252A40]/30">
+          <div className="flex items-center gap-3 p-2 rounded-lg bg-[#252A40]/60 border border-[#ACBAC4]/10">
+            <div className="h-8 w-8 rounded-md bg-[#ACBAC4]/20 border border-[#ACBAC4]/30 flex items-center justify-center text-[#E5DCC0] font-mono font-semibold text-xs shrink-0">
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-medium text-white truncate">
+                {displayName}
+              </div>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <ShieldCheck className="h-3 w-3 text-[#E5DCC0] shrink-0" />
+                <span className="text-[10px] font-mono uppercase text-[#ACBAC4] truncate">
+                  {user?.role ?? 'Operator'}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
     </>

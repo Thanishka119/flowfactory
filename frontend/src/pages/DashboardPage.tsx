@@ -42,8 +42,6 @@ export function DashboardPage() {
       value: metrics ? metrics.totalItems : '—',
       description: `${metrics ? metrics.rawMaterialsCount : 0} raw, ${metrics ? metrics.finishedGoodsCount : 0} finished`,
       icon: Package,
-      color: 'text-neutral-900 dark:text-neutral-100',
-      bg: 'bg-neutral-100 dark:bg-neutral-800',
       onClick: () => navigate('/inventory'),
     },
     {
@@ -51,8 +49,6 @@ export function DashboardPage() {
       value: metrics ? metrics.lowStockCount : '—',
       description: `${metrics ? metrics.outOfStockCount : 0} items out of stock`,
       icon: AlertTriangle,
-      color: 'text-neutral-900 dark:text-neutral-100',
-      bg: 'bg-neutral-100 dark:bg-neutral-800',
       onClick: () => navigate('/simulator'),
     },
     {
@@ -60,8 +56,6 @@ export function DashboardPage() {
       value: metrics ? metrics.activeProductionCount : '—',
       description: 'Orders currently running',
       icon: Factory,
-      color: 'text-neutral-900 dark:text-neutral-100',
-      bg: 'bg-neutral-100 dark:bg-neutral-800',
       onClick: () => navigate('/production'),
     },
     {
@@ -69,8 +63,6 @@ export function DashboardPage() {
       value: metrics ? metrics.pendingPurchasesCount : '—',
       description: 'Awaiting goods receipt',
       icon: ShoppingCart,
-      color: 'text-neutral-900 dark:text-neutral-100',
-      bg: 'bg-neutral-100 dark:bg-neutral-800',
       onClick: () => navigate('/purchases'),
     },
     {
@@ -78,8 +70,6 @@ export function DashboardPage() {
       value: metrics ? metrics.pendingInvoicesCount : '—',
       description: 'Require verification',
       icon: FileText,
-      color: 'text-neutral-900 dark:text-neutral-100',
-      bg: 'bg-neutral-100 dark:bg-neutral-800',
       onClick: () => navigate('/invoices'),
     },
     {
@@ -87,30 +77,34 @@ export function DashboardPage() {
       value: metrics ? metrics.completedSalesCount : '—',
       description: 'Customer orders fulfilled',
       icon: TrendingUp,
-      color: 'text-neutral-900 dark:text-neutral-100',
-      bg: 'bg-neutral-100 dark:bg-neutral-800',
       onClick: () => navigate('/sales'),
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Welcome header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* Command Center Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-lg border border-bluegray/40 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-mono uppercase tracking-wider text-bluegray-dark font-semibold">Live System Status: Nominal</span>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-navy">
             Welcome back, {displayName.split(' ')[0]}
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Operational overview across procurement, production, inventory ledger, and sales.
+          <p className="text-xs text-navy/70 mt-0.5">
+            Real-time operations command across procurement, inventory ledger, production lines, and dispatch.
           </p>
         </div>
-        <Badge variant="outline" className="self-start sm:self-auto gap-1.5 py-1 px-3 font-mono text-xs">
-          {user?.role ?? 'User'}
-        </Badge>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <Badge variant="outline" className="gap-1.5 py-1 px-3 font-mono text-xs bg-cream/40 border-bluegray text-navy">
+            Role: {user?.role ?? 'User'}
+          </Badge>
+        </div>
       </div>
 
-      {/* KPI grid */}
+      {/* KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
@@ -118,21 +112,21 @@ export function DashboardPage() {
             <Card
               key={kpi.title}
               onClick={kpi.onClick}
-              className="border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              className="border border-bluegray/40 bg-white hover:border-navy/40 hover:shadow-md transition-all cursor-pointer group"
             >
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                <CardTitle className="text-xs font-semibold uppercase tracking-wider text-navy/70 group-hover:text-navy transition-colors">
                   {kpi.title}
                 </CardTitle>
-                <div className={`p-2 rounded-lg ${kpi.bg}`}>
-                  <Icon className={`h-4 w-4 ${kpi.color}`} />
+                <div className="p-2 rounded-md bg-cream/80 text-navy group-hover:bg-navy group-hover:text-cream transition-colors">
+                  <Icon className="h-4 w-4" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                <div className="text-2xl font-bold font-mono tracking-tight text-navy">
                   {isLoading ? '...' : kpi.value}
                 </div>
-                <p className="text-xs text-slate-500 mt-1">{kpi.description}</p>
+                <p className="text-[11px] text-navy/60 mt-1 font-medium">{kpi.description}</p>
               </CardContent>
             </Card>
           );
@@ -142,47 +136,49 @@ export function DashboardPage() {
       {/* Live Operational Feeds */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Low Stock Items Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-600" />
+        <Card className="border-bluegray/40 bg-white">
+          <CardHeader className="border-b border-bluegray/20 pb-4">
+            <CardTitle className="text-sm font-bold text-navy flex items-center gap-2">
+              <div className="p-1.5 rounded bg-amber-100 text-amber-700">
+                <AlertTriangle className="h-4 w-4" />
+              </div>
               Low & Out-of-Stock Items
             </CardTitle>
-            <CardDescription>Items at or below configured reorder levels</CardDescription>
+            <CardDescription className="text-xs text-navy/60">Inventory items at or below reorder threshold</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="border rounded-md overflow-hidden">
+          <CardContent className="pt-4">
+            <div className="border border-bluegray/30 rounded-md overflow-hidden bg-white">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-cream/40">
                   <TableRow>
-                    <TableHead>Item</TableHead>
-                    <TableHead>Current</TableHead>
-                    <TableHead>Reorder</TableHead>
-                    <TableHead className="text-right">Status</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Item</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Current</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Reorder</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70 text-right">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {!dashboardData?.lowStockItems || dashboardData.lowStockItems.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-4 text-slate-500 text-xs">
+                      <TableCell colSpan={4} className="text-center py-6 text-navy/50 text-xs font-medium">
                         All inventory stocks are healthy.
                       </TableCell>
                     </TableRow>
                   ) : (
                     dashboardData.lowStockItems.slice(0, 5).map((item) => (
-                      <TableRow key={item.id}>
+                      <TableRow key={item.id} className="hover:bg-cream/20">
                         <TableCell>
-                          <div className="font-medium text-xs">{item.name}</div>
-                          <div className="text-[10px] text-slate-400 font-mono">{item.sku}</div>
+                          <div className="font-semibold text-xs text-navy">{item.name}</div>
+                          <div className="text-[10px] text-bluegray-dark font-mono">{item.sku}</div>
                         </TableCell>
-                        <TableCell className="text-xs font-semibold">
+                        <TableCell className="text-xs font-mono font-semibold text-navy">
                           {Number(item.currentStock)} {item.unit}
                         </TableCell>
-                        <TableCell className="text-xs text-slate-500">
+                        <TableCell className="text-xs font-mono text-navy/60">
                           {Number(item.reorderLevel)} {item.unit}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Badge className={item.isOut ? 'bg-rose-600 text-[10px]' : 'bg-amber-500 text-[10px]'}>
+                          <Badge className={item.isOut ? 'bg-rose-600 hover:bg-rose-700 text-[10px] font-mono font-semibold' : 'bg-amber-500 hover:bg-amber-600 text-[10px] font-mono font-semibold'}>
                             {item.isOut ? 'OUT' : 'LOW'}
                           </Badge>
                         </TableCell>
@@ -196,29 +192,31 @@ export function DashboardPage() {
         </Card>
 
         {/* Recent Ledger Transactions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Clock className="h-4 w-4 text-blue-600" />
+        <Card className="border-bluegray/40 bg-white">
+          <CardHeader className="border-b border-bluegray/20 pb-4">
+            <CardTitle className="text-sm font-bold text-navy flex items-center gap-2">
+              <div className="p-1.5 rounded bg-blue-100 text-navy">
+                <Clock className="h-4 w-4" />
+              </div>
               Recent Inventory Ledger Movements
             </CardTitle>
-            <CardDescription>Real-time audit trail of stock adjustments</CardDescription>
+            <CardDescription className="text-xs text-navy/60">Real-time audit trail of stock adjustments</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="border rounded-md overflow-hidden">
+          <CardContent className="pt-4">
+            <div className="border border-bluegray/30 rounded-md overflow-hidden bg-white">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-cream/40">
                   <TableRow>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Item</TableHead>
-                    <TableHead>Delta</TableHead>
-                    <TableHead className="text-right">Balance</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Type</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Item</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Delta</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70 text-right">Balance</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {!dashboardData?.recentTransactions || dashboardData.recentTransactions.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-4 text-slate-500 text-xs">
+                      <TableCell colSpan={4} className="text-center py-6 text-navy/50 text-xs font-medium">
                         No transactions recorded yet.
                       </TableCell>
                     </TableRow>
@@ -226,19 +224,19 @@ export function DashboardPage() {
                     dashboardData.recentTransactions.slice(0, 5).map((tx) => {
                       const delta = Number(tx.quantity);
                       return (
-                        <TableRow key={tx.id}>
-                          <TableCell className="text-xs font-semibold">{tx.type}</TableCell>
+                        <TableRow key={tx.id} className="hover:bg-cream/20">
+                          <TableCell className="text-xs font-mono font-semibold text-navy">{tx.type}</TableCell>
                           <TableCell>
-                            <div className="text-xs font-medium">{tx.item?.name}</div>
-                            <div className="text-[10px] text-slate-400 font-mono">{tx.item?.sku}</div>
+                            <div className="text-xs font-semibold text-navy">{tx.item?.name}</div>
+                            <div className="text-[10px] text-bluegray-dark font-mono">{tx.item?.sku}</div>
                           </TableCell>
-                          <TableCell className="text-xs font-semibold">
-                            <span className={delta < 0 ? 'text-rose-600 flex items-center' : 'text-emerald-600 flex items-center'}>
+                          <TableCell className="text-xs font-semibold font-mono">
+                            <span className={delta < 0 ? 'text-rose-600 flex items-center' : 'text-emerald-700 flex items-center'}>
                               {delta < 0 ? <ArrowDownRight className="h-3 w-3 mr-0.5" /> : <ArrowUpRight className="h-3 w-3 mr-0.5" />}
                               {Math.abs(delta)} {tx.item?.unit}
                             </span>
                           </TableCell>
-                          <TableCell className="text-right text-xs font-medium">
+                          <TableCell className="text-right text-xs font-mono font-semibold text-navy">
                             {Number(tx.balanceAfter)} {tx.item?.unit}
                           </TableCell>
                         </TableRow>

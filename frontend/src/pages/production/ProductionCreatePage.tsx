@@ -80,35 +80,35 @@ export const ProductionCreatePage = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/production')}>
-          <ArrowLeft className="h-4 w-4" />
+        <Button variant="ghost" size="sm" onClick={() => navigate('/production')} className="text-navy hover:bg-cream/40">
+          <ArrowLeft className="h-4 w-4 mr-1" />Back
         </Button>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Create Production Order</h1>
-          <p className="text-sm text-slate-500">Define the target product and required bill of materials.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-navy">Create Production Work Order</h1>
+          <p className="text-xs text-navy/70">Define the target finished product and required bill of materials formula.</p>
         </div>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Production Target</CardTitle>
-              <CardDescription>Select the item to produce and planned output quantity.</CardDescription>
+          <Card className="border border-bluegray/40 bg-white shadow-sm">
+            <CardHeader className="border-b border-bluegray/20 pb-4">
+              <CardTitle className="text-sm font-bold uppercase tracking-wider text-navy">Production Target Output</CardTitle>
+              <CardDescription className="text-xs text-navy/60">Select target SKU and specify batch quantity to manufacture.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="pt-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="finishedGoodItemId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Finished Product *</FormLabel>
+                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-navy/70">Finished Good SKU *</FormLabel>
                       <FormControl>
                         <select
                           {...field}
                           disabled={isInventoryLoading}
-                          className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
+                          className="flex h-10 w-full rounded-md border border-bluegray/50 bg-white px-3 py-2 text-xs font-medium text-navy focus:outline-none focus:ring-1 focus:ring-navy"
                         >
                           <option value="">Select Finished Good</option>
                           {finishedGoods.map((item) => (
@@ -118,7 +118,7 @@ export const ProductionCreatePage = () => {
                           ))}
                         </select>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-[10px] text-rose-600 font-semibold" />
                     </FormItem>
                   )}
                 />
@@ -128,13 +128,13 @@ export const ProductionCreatePage = () => {
                   name="plannedQuantity"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        Planned Output Quantity {selectedFinishedGood ? `(${selectedFinishedGood.unit})` : ''} *
+                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-navy/70">
+                        Planned Target Quantity {selectedFinishedGood ? `(${selectedFinishedGood.unit})` : ''} *
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" step="any" min="0.0001" {...field} />
+                        <Input type="number" step="any" min="0.0001" {...field} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-[10px] text-rose-600 font-semibold" />
                     </FormItem>
                   )}
                 />
@@ -145,23 +145,23 @@ export const ProductionCreatePage = () => {
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Notes / Batch Details (Optional)</FormLabel>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-navy/70">Production Instructions / Batch Notes</FormLabel>
                     <FormControl>
-                      <Input placeholder="Production instructions or batch specifications..." {...field} />
+                      <Input placeholder="Batch formulation, line machine #, or engineering instructions..." {...field} className="bg-white border-bluegray/50 focus:border-navy text-xs" />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-[10px] text-rose-600 font-semibold" />
                   </FormItem>
                 )}
               />
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+          <Card className="border border-bluegray/40 bg-white overflow-hidden shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-bluegray/20 pb-4 bg-cream/20">
               <div>
-                <CardTitle>Bill of Materials (Required Materials)</CardTitle>
-                <CardDescription>
-                  Specify the raw materials and components needed for this production run.
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-navy">Bill of Materials (Required Raw Inputs)</CardTitle>
+                <CardDescription className="text-xs text-navy/60">
+                  Specify raw materials and components consumed during production.
                 </CardDescription>
               </div>
               <Button
@@ -169,18 +169,19 @@ export const ProductionCreatePage = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => append({ itemId: '', requiredQuantity: 1 })}
+                className="border-bluegray/40 text-navy text-xs font-semibold hover:bg-cream/40"
               >
-                <Plus className="mr-2 h-4 w-4" /> Add Material
+                <Plus className="mr-1.5 h-3.5 w-3.5" /> Add Material
               </Button>
             </CardHeader>
-            <CardContent>
-              <div className="border rounded-md overflow-hidden">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
                 <Table>
-                  <TableHeader>
+                  <TableHeader className="bg-cream/40">
                     <TableRow>
-                      <TableHead>Material / Component</TableHead>
-                      <TableHead className="w-44">Required Quantity</TableHead>
-                      <TableHead className="w-28">Available Stock</TableHead>
+                      <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Material / Component</TableHead>
+                      <TableHead className="w-44 text-[11px] font-semibold uppercase tracking-wider text-navy/70">Required Quantity</TableHead>
+                      <TableHead className="w-32 text-[11px] font-semibold uppercase tracking-wider text-navy/70">Available Stock</TableHead>
                       <TableHead className="w-16"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -190,7 +191,7 @@ export const ProductionCreatePage = () => {
                       const selectedItem = allInventoryItems.find((i) => i.id === currentSelectedId);
 
                       return (
-                        <TableRow key={field.id}>
+                        <TableRow key={field.id} className="border-b border-bluegray/15 hover:bg-cream/20 transition-colors">
                           <TableCell>
                             <FormField
                               control={form.control}
@@ -200,7 +201,7 @@ export const ProductionCreatePage = () => {
                                   <FormControl>
                                     <select
                                       {...field}
-                                      className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
+                                      className="flex h-9 w-full rounded-md border border-bluegray/50 bg-white px-3 py-1 text-xs font-medium text-navy focus:outline-none focus:ring-1 focus:ring-navy"
                                     >
                                       <option value="">Select Material / Component</option>
                                       {rawMaterialsAndComponents.map((item) => (
@@ -210,7 +211,7 @@ export const ProductionCreatePage = () => {
                                       ))}
                                     </select>
                                   </FormControl>
-                                  <FormMessage />
+                                  <FormMessage className="text-[10px] text-rose-600 font-semibold" />
                                 </FormItem>
                               )}
                             />
@@ -223,26 +224,26 @@ export const ProductionCreatePage = () => {
                                 <FormItem>
                                   <FormControl>
                                     <div className="flex items-center gap-2">
-                                      <Input type="number" step="any" min="0.0001" {...field} />
+                                      <Input type="number" step="any" min="0.0001" {...field} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono h-9" />
                                       {selectedItem && (
-                                        <span className="text-xs text-slate-500 font-medium">
+                                        <span className="text-xs text-navy/60 font-mono font-medium">
                                           {selectedItem.unit}
                                         </span>
                                       )}
                                     </div>
                                   </FormControl>
-                                  <FormMessage />
+                                  <FormMessage className="text-[10px] text-rose-600 font-semibold" />
                                 </FormItem>
                               )}
                             />
                           </TableCell>
-                          <TableCell className="text-sm font-medium">
+                          <TableCell className="text-xs font-mono font-semibold">
                             {selectedItem ? (
                               <span
                                 className={
                                   Number(selectedItem.currentStock) <= 0
-                                    ? 'text-rose-600 font-semibold'
-                                    : 'text-slate-700 dark:text-slate-300'
+                                    ? 'text-rose-600'
+                                    : 'text-navy'
                                 }
                               >
                                 {Number(selectedItem.currentStock)} {selectedItem.unit}
@@ -258,7 +259,7 @@ export const ProductionCreatePage = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => remove(index)}
-                                className="text-rose-500 hover:text-rose-700"
+                                className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 h-8 w-8"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -272,7 +273,7 @@ export const ProductionCreatePage = () => {
               </div>
 
               {createMutation.isError && (
-                <div className="mt-4 p-3 rounded-md bg-rose-50 text-rose-700 text-sm">
+                <div className="m-4 p-3 rounded-md bg-rose-50 border border-rose-200 text-rose-700 text-xs">
                   {(createMutation.error as any)?.response?.data?.message ||
                     (createMutation.error as Error).message ||
                     'Failed to create production order'}
@@ -281,11 +282,11 @@ export const ProductionCreatePage = () => {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => navigate('/production')}>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={() => navigate('/production')} className="border-bluegray/40 text-navy text-xs font-semibold hover:bg-cream/40">
               Cancel
             </Button>
-            <Button type="submit" disabled={createMutation.isPending}>
+            <Button type="submit" disabled={createMutation.isPending} className="bg-navy hover:bg-navy-dark text-white text-xs font-semibold shadow-sm">
               {createMutation.isPending ? 'Saving...' : 'Save as DRAFT'}
             </Button>
           </div>

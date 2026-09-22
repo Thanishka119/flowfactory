@@ -74,82 +74,82 @@ export function InventoryEditPage() {
   }
 
   if (isLoading) {
-    return <div className="flex items-center justify-center py-12 text-sm text-slate-500">Loading...</div>;
+    return <div className="flex items-center justify-center py-16 text-xs font-mono uppercase tracking-wider text-navy/60">Loading item specifications...</div>;
   }
 
   if (!item) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 gap-2">
-        <p className="text-sm text-red-500">Item not found</p>
-        <Button variant="outline" onClick={() => navigate('/inventory')}>Back to Inventory</Button>
+      <div className="flex flex-col items-center justify-center py-16 gap-3 bg-white border border-bluegray/40 rounded-lg p-6">
+        <p className="text-xs font-semibold text-rose-600">Item not found</p>
+        <Button variant="outline" className="border-bluegray/40 text-navy text-xs font-semibold" onClick={() => navigate('/inventory')}>Back to Inventory</Button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
+    <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={() => navigate(`/inventory/${id}`)}>
+        <Button variant="ghost" size="sm" onClick={() => navigate(`/inventory/${id}`)} className="text-navy hover:bg-cream/40">
           <ArrowLeft className="h-4 w-4 mr-1" />Back
         </Button>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Edit: {item.name}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-navy">Edit Item: {item.name}</h1>
       </div>
 
-      <Card className="border-slate-200 dark:border-slate-800">
-        <CardHeader>
-          <CardTitle>Update Item Details</CardTitle>
-          <p className="text-sm text-slate-500">SKU: <span className="font-mono">{item.sku}</span> — Type: {item.type.replace('_', ' ')} (immutable)</p>
+      <Card className="border border-bluegray/40 bg-white shadow-sm">
+        <CardHeader className="border-b border-bluegray/20 pb-4">
+          <CardTitle className="text-sm font-bold uppercase tracking-wider text-navy">Update Specifications</CardTitle>
+          <p className="text-xs text-navy/60 font-medium">SKU: <span className="font-mono text-navy font-bold">{item.sku}</span> — Type: <span className="text-navy font-bold">{item.type.replace('_', ' ')}</span> (immutable)</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {updateMutation.isError && (
-              <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm p-3 rounded-md">
+              <div className="bg-rose-50 border border-rose-300 text-rose-700 text-xs p-3 rounded-md">
                 {updateMutation.error?.message || 'Failed to update item'}
               </div>
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="name">Name *</Label>
-              <Input id="name" {...register('name')} />
-              {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+              <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Item Name *</Label>
+              <Input id="name" {...register('name')} className="bg-white border-bluegray/50 focus:border-navy text-xs" />
+              {errors.name && <p className="text-[10px] text-rose-600 font-semibold">{errors.name.message}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="description">Description</Label>
-              <Input id="description" {...register('description')} />
+              <Label htmlFor="description" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Description</Label>
+              <Input id="description" {...register('description')} className="bg-white border-bluegray/50 focus:border-navy text-xs" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="category">Category *</Label>
-                <Input id="category" {...register('category')} />
-                {errors.category && <p className="text-xs text-red-500">{errors.category.message}</p>}
+                <Label htmlFor="category" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Category *</Label>
+                <Input id="category" {...register('category')} className="bg-white border-bluegray/50 focus:border-navy text-xs" />
+                {errors.category && <p className="text-[10px] text-rose-600 font-semibold">{errors.category.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="unit">Unit *</Label>
-                <Input id="unit" {...register('unit')} />
-                {errors.unit && <p className="text-xs text-red-500">{errors.unit.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="minStock">Minimum Stock</Label>
-                <Input id="minStock" type="number" step="any" {...register('minStock')} />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="reorderLevel">Reorder Level</Label>
-                <Input id="reorderLevel" type="number" step="any" {...register('reorderLevel')} />
+                <Label htmlFor="unit" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Unit *</Label>
+                <Input id="unit" {...register('unit')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono uppercase" />
+                {errors.unit && <p className="text-[10px] text-rose-600 font-semibold">{errors.unit.message}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="supplierId">Supplier</Label>
+                <Label htmlFor="minStock" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Minimum Stock Floor</Label>
+                <Input id="minStock" type="number" step="any" {...register('minStock')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="reorderLevel" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Reorder Threshold</Label>
+                <Input id="reorderLevel" type="number" step="any" {...register('reorderLevel')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="supplierId" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Primary Supplier</Label>
                 <select
                   id="supplierId"
                   {...register('supplierId')}
-                  className="w-full h-10 rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 text-sm text-neutral-900 dark:text-white"
+                  className="w-full h-10 rounded-md border border-bluegray/50 bg-white px-3 text-xs font-medium text-navy focus:outline-none focus:ring-1 focus:ring-navy"
                 >
                   <option value="">None (No primary supplier)</option>
                   {suppliers.map((s) => (
@@ -159,20 +159,20 @@ export function InventoryEditPage() {
                   ))}
                 </select>
                 {isSuppliersLoading && (
-                  <p className="text-xs text-neutral-400">Loading suppliers...</p>
+                  <p className="text-[10px] text-navy/50 font-mono">Loading suppliers...</p>
                 )}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="expiryDate">Expiry Date</Label>
-                <Input id="expiryDate" type="date" {...register('expiryDate')} />
+                <Label htmlFor="expiryDate" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Expiry Date</Label>
+                <Input id="expiryDate" type="date" {...register('expiryDate')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
               </div>
             </div>
 
-            <div className="flex gap-3 pt-2">
-              <Button type="submit" disabled={isSubmitting || updateMutation.isPending}>
-                {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+            <div className="flex gap-3 pt-4 border-t border-bluegray/20">
+              <Button type="submit" disabled={isSubmitting || updateMutation.isPending} className="bg-navy hover:bg-navy-dark text-white text-xs font-semibold">
+                {updateMutation.isPending ? 'Updating...' : 'Commit Changes'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate(`/inventory/${id}`)}>
+              <Button type="button" variant="outline" onClick={() => navigate(`/inventory/${id}`)} className="border-bluegray/40 text-navy text-xs font-semibold hover:bg-cream/40">
                 Cancel
               </Button>
             </div>

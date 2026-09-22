@@ -5,6 +5,28 @@ export default {
   theme: {
     extend: {
       colors: {
+        navy: {
+          DEFAULT: '#2F344F',
+          dark: '#252A40',
+          light: '#3D4466',
+          subtle: '#202438',
+        },
+        cream: {
+          DEFAULT: '#F1F0DC',
+          light: '#F8F7ED',
+          dark: '#E2E0C4',
+        },
+        beige: {
+          DEFAULT: '#E5DCC0',
+          dark: '#D8CEA9',
+          light: '#F3EFE1',
+        },
+        bluegray: {
+          DEFAULT: '#ACBAC4',
+          light: '#C8D2D9',
+          dark: '#7D8E9A',
+          subtle: '#EDF2F5',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

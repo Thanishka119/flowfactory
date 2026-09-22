@@ -60,56 +60,56 @@ export function InventoryCreatePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
+    <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/inventory')}>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/inventory')} className="text-navy hover:bg-cream/40">
           <ArrowLeft className="h-4 w-4 mr-1" />Back
         </Button>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create Inventory Item</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-navy">Create Inventory Item</h1>
       </div>
 
-      <Card className="border-slate-200 dark:border-slate-800">
-        <CardHeader>
-          <CardTitle>Item Details</CardTitle>
+      <Card className="border border-bluegray/40 bg-white shadow-sm">
+        <CardHeader className="border-b border-bluegray/20 pb-4">
+          <CardTitle className="text-sm font-bold uppercase tracking-wider text-navy">Item Specifications</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {createMutation.isError && (
-              <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm p-3 rounded-md">
+              <div className="bg-rose-50 border border-rose-300 text-rose-700 text-xs p-3 rounded-md">
                 {createMutation.error?.message || 'Failed to create item'}
               </div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="sku">SKU *</Label>
-                <Input id="sku" {...register('sku')} placeholder="e.g. RM-STEEL-001" />
-                {errors.sku && <p className="text-xs text-red-500">{errors.sku.message}</p>}
+                <Label htmlFor="sku" className="text-xs font-semibold uppercase tracking-wider text-navy/70">SKU Code *</Label>
+                <Input id="sku" {...register('sku')} placeholder="e.g. RM-STEEL-001" className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
+                {errors.sku && <p className="text-[10px] text-rose-600 font-semibold">{errors.sku.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="name">Name *</Label>
-                <Input id="name" {...register('name')} placeholder="Item name" />
-                {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+                <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Item Name *</Label>
+                <Input id="name" {...register('name')} placeholder="Item name" className="bg-white border-bluegray/50 focus:border-navy text-xs" />
+                {errors.name && <p className="text-[10px] text-rose-600 font-semibold">{errors.name.message}</p>}
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="description">Description</Label>
-              <Input id="description" {...register('description')} placeholder="Optional description" />
+              <Label htmlFor="description" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Description</Label>
+              <Input id="description" {...register('description')} placeholder="Optional engineering notes or item description" className="bg-white border-bluegray/50 focus:border-navy text-xs" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="category">Category *</Label>
-                <Input id="category" {...register('category')} placeholder="e.g. Raw Materials" />
-                {errors.category && <p className="text-xs text-red-500">{errors.category.message}</p>}
+                <Label htmlFor="category" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Category *</Label>
+                <Input id="category" {...register('category')} placeholder="e.g. Raw Materials" className="bg-white border-bluegray/50 focus:border-navy text-xs" />
+                {errors.category && <p className="text-[10px] text-rose-600 font-semibold">{errors.category.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="type">Type *</Label>
+                <Label htmlFor="type" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Item Type *</Label>
                 <select
                   id="type"
                   {...register('type')}
-                  className="w-full h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm"
+                  className="w-full h-10 rounded-md border border-bluegray/50 bg-white px-3 text-xs font-medium text-navy focus:outline-none focus:ring-1 focus:ring-navy"
                 >
                   <option value="RAW_MATERIAL">Raw Material</option>
                   <option value="COMPONENT">Component</option>
@@ -118,30 +118,30 @@ export function InventoryCreatePage() {
                 </select>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="unit">Unit *</Label>
-                <Input id="unit" {...register('unit')} placeholder="e.g. KG, UNIT" />
-                {errors.unit && <p className="text-xs text-red-500">{errors.unit.message}</p>}
+                <Label htmlFor="unit" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Unit *</Label>
+                <Input id="unit" {...register('unit')} placeholder="e.g. KG, PCS, LTR" className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono uppercase" />
+                {errors.unit && <p className="text-[10px] text-rose-600 font-semibold">{errors.unit.message}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="minStock">Minimum Stock</Label>
-                <Input id="minStock" type="number" step="any" {...register('minStock')} />
+                <Label htmlFor="minStock" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Minimum Stock Floor</Label>
+                <Input id="minStock" type="number" step="any" {...register('minStock')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="reorderLevel">Reorder Level</Label>
-                <Input id="reorderLevel" type="number" step="any" {...register('reorderLevel')} />
+                <Label htmlFor="reorderLevel" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Reorder Threshold</Label>
+                <Input id="reorderLevel" type="number" step="any" {...register('reorderLevel')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="supplierId">Supplier</Label>
+                <Label htmlFor="supplierId" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Primary Supplier</Label>
                 <select
                   id="supplierId"
                   {...register('supplierId')}
-                  className="w-full h-10 rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 text-sm text-neutral-900 dark:text-white"
+                  className="w-full h-10 rounded-md border border-bluegray/50 bg-white px-3 text-xs font-medium text-navy focus:outline-none focus:ring-1 focus:ring-navy"
                 >
                   <option value="">None (No primary supplier)</option>
                   {suppliers.map((s) => (
@@ -151,21 +151,21 @@ export function InventoryCreatePage() {
                   ))}
                 </select>
                 {isSuppliersLoading && (
-                  <p className="text-xs text-neutral-400">Loading suppliers...</p>
+                  <p className="text-[10px] text-navy/50 font-mono">Loading suppliers...</p>
                 )}
-                {errors.supplierId && <p className="text-xs text-red-500">{errors.supplierId.message}</p>}
+                {errors.supplierId && <p className="text-[10px] text-rose-600 font-semibold">{errors.supplierId.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="expiryDate">Expiry Date</Label>
-                <Input id="expiryDate" type="date" {...register('expiryDate')} />
+                <Label htmlFor="expiryDate" className="text-xs font-semibold uppercase tracking-wider text-navy/70">Expiry Date (Optional)</Label>
+                <Input id="expiryDate" type="date" {...register('expiryDate')} className="bg-white border-bluegray/50 focus:border-navy text-xs font-mono" />
               </div>
             </div>
 
-            <div className="flex gap-3 pt-2">
-              <Button type="submit" disabled={isSubmitting || createMutation.isPending}>
-                {createMutation.isPending ? 'Creating...' : 'Create Item'}
+            <div className="flex gap-3 pt-4 border-t border-bluegray/20">
+              <Button type="submit" disabled={isSubmitting || createMutation.isPending} className="bg-navy hover:bg-navy-dark text-white text-xs font-semibold">
+                {createMutation.isPending ? 'Registering...' : 'Register Item'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate('/inventory')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/inventory')} className="border-bluegray/40 text-navy text-xs font-semibold hover:bg-cream/40">
                 Cancel
               </Button>
             </div>

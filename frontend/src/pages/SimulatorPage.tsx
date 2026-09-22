@@ -85,38 +85,60 @@ export const SimulatorPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-600">
-          <Sparkles className="h-5 w-5" />
+    <div className="space-y-6 pb-12">
+      {/* Page Header */}
+      <div className="flex items-center gap-4 border-b border-bluegray/30 pb-4">
+        <div className="h-10 w-10 rounded-lg bg-navy text-white flex items-center justify-center shadow-sm">
+          <Sparkles className="h-5 w-5 text-beige" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">What-If Simulator & Operational Intelligence</h1>
-          <p className="text-sm text-slate-500">
-            Model production runs, demand dispatch scenarios, and review predictive stock recommendations safely without altering database inventory.
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight text-navy">What-If Simulator & Intelligence</h1>
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-bluegray/15 text-navy border border-bluegray/30">
+              Predictive Operations
+            </span>
+          </div>
+          <p className="text-xs text-navy/60 font-medium mt-0.5">
+            Model production runs, simulate demand dispatches, and review predictive stock recommendations without committing ledger changes.
           </p>
         </div>
       </div>
 
-      <div className="flex gap-2 border-b">
+      {/* Tabs */}
+      <div className="flex gap-2 border-b border-bluegray/30 pb-px">
         <Button
-          variant={activeTab === 'production' ? 'default' : 'ghost'}
+          variant="ghost"
+          size="sm"
           onClick={() => setActiveTab('production')}
-          className="rounded-b-none"
+          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all ${
+            activeTab === 'production'
+              ? 'border-navy text-navy bg-white shadow-sm'
+              : 'border-transparent text-navy/60 hover:text-navy hover:bg-cream/40'
+          }`}
         >
           <Factory className="mr-2 h-4 w-4" /> Production Run Simulator
         </Button>
         <Button
-          variant={activeTab === 'sale' ? 'default' : 'ghost'}
+          variant="ghost"
+          size="sm"
           onClick={() => setActiveTab('sale')}
-          className="rounded-b-none"
+          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all ${
+            activeTab === 'sale'
+              ? 'border-navy text-navy bg-white shadow-sm'
+              : 'border-transparent text-navy/60 hover:text-navy hover:bg-cream/40'
+          }`}
         >
           <TrendingUp className="mr-2 h-4 w-4" /> Demand & Sales Simulator
         </Button>
         <Button
-          variant={activeTab === 'intelligence' ? 'default' : 'ghost'}
+          variant="ghost"
+          size="sm"
           onClick={() => setActiveTab('intelligence')}
-          className="rounded-b-none"
+          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all ${
+            activeTab === 'intelligence'
+              ? 'border-navy text-navy bg-white shadow-sm'
+              : 'border-transparent text-navy/60 hover:text-navy hover:bg-cream/40'
+          }`}
         >
           <Lightbulb className="mr-2 h-4 w-4" /> Operational Intelligence
         </Button>
@@ -124,49 +146,50 @@ export const SimulatorPage = () => {
 
       {activeTab === 'production' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>Scenario Inputs</CardTitle>
-              <CardDescription>Target product output and material assumptions</CardDescription>
+          <Card className="lg:col-span-1 border-bluegray/40 shadow-sm bg-white">
+            <CardHeader className="border-b border-bluegray/20 pb-3">
+              <CardTitle className="text-sm font-bold text-navy">Scenario Parameters</CardTitle>
+              <CardDescription className="text-xs text-navy/60">Target output quantity and BOM component demands</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-4">
               <div>
-                <label className="text-xs font-semibold text-slate-600">Target Finished Good</label>
+                <label className="text-xs font-semibold text-navy block mb-1.5 uppercase tracking-wider">Target Finished Good</label>
                 <select
                   value={selectedFgId}
                   onChange={(e) => setSelectedFgId(e.target.value)}
-                  className="mt-1 flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white px-3 py-2 text-sm"
+                  className="flex h-9 w-full rounded-md border border-bluegray/50 bg-white px-3 py-1 text-xs text-navy font-semibold focus:border-navy focus:outline-none"
                 >
-                  <option value="">Select Finished Product</option>
+                  <option value="">Select Finished Product...</option>
                   {finishedGoods.map((fg) => (
                     <option key={fg.id} value={fg.id}>
-                      {fg.name} ({fg.sku}) — Stock: {Number(fg.currentStock)} {fg.unit}
+                      {fg.name} ({fg.sku}) — In Stock: {Number(fg.currentStock)} {fg.unit}
                     </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-600">Planned Production Quantity</label>
+                <label className="text-xs font-semibold text-navy block mb-1.5 uppercase tracking-wider">Planned Output Units</label>
                 <Input
                   type="number"
                   min="1"
                   value={plannedQty}
                   onChange={(e) => setPlannedQty(Number(e.target.value))}
-                  className="mt-1"
+                  className="h-9 text-xs border-bluegray/50 bg-white text-navy font-mono"
                 />
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 border-t border-bluegray/20">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-semibold text-slate-600">Required Materials</span>
+                  <span className="text-xs font-semibold text-navy uppercase tracking-wider">Required Materials</span>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => setReqItems([...reqItems, { itemId: '', requiredQuantity: 1 }])}
+                    className="h-7 text-xs border-bluegray/40 text-navy hover:bg-cream/40"
                   >
-                    + Add
+                    + Add Material
                   </Button>
                 </div>
                 {reqItems.map((item, idx) => (
@@ -178,9 +201,9 @@ export const SimulatorPage = () => {
                         copy[idx].itemId = e.target.value;
                         setReqItems(copy);
                       }}
-                      className="flex h-9 flex-1 rounded border px-2 text-xs"
+                      className="flex h-8 flex-1 rounded border border-bluegray/50 bg-white px-2 text-xs text-navy font-medium focus:border-navy"
                     >
-                      <option value="">Select Material</option>
+                      <option value="">Select Material...</option>
                       {materials.map((m) => (
                         <option key={m.id} value={m.id}>
                           {m.name} ({m.sku})
@@ -196,97 +219,101 @@ export const SimulatorPage = () => {
                         copy[idx].requiredQuantity = Number(e.target.value);
                         setReqItems(copy);
                       }}
-                      className="h-9 w-20 text-xs"
+                      className="h-8 w-20 text-xs border-bluegray/50 font-mono"
                     />
                   </div>
                 ))}
               </div>
 
               <Button
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white mt-4"
+                className="w-full bg-navy hover:bg-navy-dark text-white font-semibold text-xs shadow-sm mt-4"
                 onClick={handleSimulateProduction}
                 disabled={prodLoading || !selectedFgId || !canSimulateProduction}
               >
                 {prodLoading
-                  ? 'Calculating...'
+                  ? 'Calculating Scenario...'
                   : !canSimulateProduction
                   ? 'Production Simulation Unauthorized'
                   : 'Run Production Simulation'}
               </Button>
               {!canSimulateProduction && (
-                <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 p-2 rounded mt-2">
                   Requires Production Manager or Warehouse Staff role (production:read permission).
                 </p>
               )}
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Simulation Outcome</CardTitle>
-              <CardDescription>Projected stock balances, shortages, and lead-time alerts</CardDescription>
+          <Card className="lg:col-span-2 border-bluegray/40 shadow-sm bg-white">
+            <CardHeader className="border-b border-bluegray/20 pb-3">
+              <CardTitle className="text-sm font-bold text-navy">Simulation Forecast Outcome</CardTitle>
+              <CardDescription className="text-xs text-navy/60">Projected inventory balances, material shortages, and procurement alerts</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               {!prodResult ? (
-                <div className="py-12 text-center text-slate-400 text-sm">
-                  Configure the scenario on the left and click 'Run Production Simulation'.
+                <div className="py-16 text-center text-navy/50 text-xs font-semibold">
+                  Configure simulation parameters on the left and click 'Run Production Simulation'.
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-3 gap-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <div className="grid grid-cols-3 gap-4 p-4 rounded-lg bg-cream/40 border border-bluegray/30">
                     <div>
-                      <div className="text-xs text-slate-500 uppercase font-semibold">Target Product</div>
-                      <div className="font-semibold text-slate-900 mt-1">{prodResult.finishedGood.name}</div>
+                      <div className="text-[10px] text-navy/70 uppercase font-bold tracking-wider">Target Finished Good</div>
+                      <div className="text-sm font-bold text-navy mt-1">{prodResult.finishedGood.name}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-slate-500 uppercase font-semibold">Current Stock</div>
-                      <div className="text-lg font-bold mt-1">{prodResult.finishedGood.currentStock} {prodResult.finishedGood.unit}</div>
+                      <div className="text-[10px] text-navy/70 uppercase font-bold tracking-wider">Current Stock</div>
+                      <div className="text-base font-bold font-mono text-navy mt-1">{prodResult.finishedGood.currentStock} {prodResult.finishedGood.unit}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-slate-500 uppercase font-semibold">Projected Output Stock</div>
-                      <div className="text-lg font-bold text-emerald-600 mt-1">
+                      <div className="text-[10px] text-navy/70 uppercase font-bold tracking-wider">Projected Output Stock</div>
+                      <div className="text-base font-bold font-mono text-emerald-700 mt-1">
                         {prodResult.finishedGood.projectedStock} {prodResult.finishedGood.unit}
                       </div>
                     </div>
                   </div>
 
                   {prodResult.hasShortage && (
-                    <div className="p-3 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-rose-600" />
-                      <span>Warning: One or more required materials will result in a shortage! Purchase orders required.</span>
+                    <div className="p-3 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 font-medium">
+                      <AlertTriangle className="h-4 w-4 text-rose-600 flex-shrink-0" />
+                      <span>Warning: One or more required components will experience shortages. Immediate PO creation advised.</span>
                     </div>
                   )}
 
-                  <div className="border rounded-md overflow-hidden">
+                  <div className="border border-bluegray/30 rounded-md overflow-hidden">
                     <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Material</TableHead>
-                          <TableHead>Current Stock</TableHead>
-                          <TableHead>Required</TableHead>
-                          <TableHead>Projected Balance</TableHead>
-                          <TableHead>Shortage / Order Req</TableHead>
-                          <TableHead>Supplier Lead Time</TableHead>
+                      <TableHeader className="bg-cream/50">
+                        <TableRow className="border-b border-bluegray/30">
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Material</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Current Stock</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Required</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Projected Balance</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Shortage Status</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Lead Time</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {prodResult.materials.map((m) => (
-                          <TableRow key={m.itemId}>
-                            <TableCell className="font-medium">{m.name} ({m.sku})</TableCell>
-                            <TableCell>{m.currentStock} {m.unit}</TableCell>
-                            <TableCell>{m.requiredQuantity} {m.unit}</TableCell>
-                            <TableCell className={m.isShortage ? 'text-rose-600 font-semibold' : 'text-slate-700'}>
+                          <TableRow key={m.itemId} className="border-b border-bluegray/20 hover:bg-cream/20">
+                            <TableCell className="font-semibold text-xs text-navy py-2.5">{m.name} ({m.sku})</TableCell>
+                            <TableCell className="font-mono text-xs text-navy py-2.5">{m.currentStock} {m.unit}</TableCell>
+                            <TableCell className="font-mono text-xs text-navy py-2.5">{m.requiredQuantity} {m.unit}</TableCell>
+                            <TableCell className={`font-mono text-xs font-bold py-2.5 ${m.isShortage ? 'text-rose-600' : 'text-navy'}`}>
                               {m.projectedBalance} {m.unit}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-2.5">
                               {m.isShortage ? (
-                                <Badge className="bg-rose-600">Short {m.shortageQuantity} {m.unit}</Badge>
+                                <Badge className="bg-rose-100 text-rose-800 border-rose-300 hover:bg-rose-100 text-[10px]">
+                                  Short {m.shortageQuantity} {m.unit}
+                                </Badge>
                               ) : (
-                                <Badge variant="outline" className="text-emerald-600">Sufficient</Badge>
+                                <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-300 text-[10px]">
+                                  Sufficient
+                                </Badge>
                               )}
                             </TableCell>
-                            <TableCell>
-                              {m.supplier ? `${m.supplier.leadTimeDays} days (${m.supplier.name})` : 'No supplier'}
+                            <TableCell className="text-xs text-navy/80 py-2.5">
+                              {m.supplier ? `${m.supplier.leadTimeDays}d (${m.supplier.name})` : '—'}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -302,22 +329,23 @@ export const SimulatorPage = () => {
 
       {activeTab === 'sale' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>Demand Scenario</CardTitle>
-              <CardDescription>Test bulk or custom customer demand</CardDescription>
+          <Card className="lg:col-span-1 border-bluegray/40 shadow-sm bg-white">
+            <CardHeader className="border-b border-bluegray/20 pb-3">
+              <CardTitle className="text-sm font-bold text-navy">Demand Scenario</CardTitle>
+              <CardDescription className="text-xs text-navy/60">Simulate customer orders and test stock fulfillment</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-4">
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-semibold text-slate-600">Dispatched Items</span>
+                  <span className="text-xs font-semibold text-navy uppercase tracking-wider">Dispatched Items</span>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => setSaleItems([...saleItems, { itemId: '', quantity: 1 }])}
+                    className="h-7 text-xs border-bluegray/40 text-navy hover:bg-cream/40"
                   >
-                    + Add
+                    + Add Item
                   </Button>
                 </div>
                 {saleItems.map((item, idx) => (
@@ -329,9 +357,9 @@ export const SimulatorPage = () => {
                         copy[idx].itemId = e.target.value;
                         setSaleItems(copy);
                       }}
-                      className="flex h-9 flex-1 rounded border px-2 text-xs"
+                      className="flex h-8 flex-1 rounded border border-bluegray/50 bg-white px-2 text-xs text-navy font-medium focus:border-navy"
                     >
-                      <option value="">Select Item</option>
+                      <option value="">Select Item...</option>
                       {allItems.map((i) => (
                         <option key={i.id} value={i.id}>
                           {i.name} ({i.sku})
@@ -347,67 +375,72 @@ export const SimulatorPage = () => {
                         copy[idx].quantity = Number(e.target.value);
                         setSaleItems(copy);
                       }}
-                      className="h-9 w-20 text-xs"
+                      className="h-8 w-20 text-xs border-bluegray/50 font-mono"
                     />
                   </div>
                 ))}
               </div>
 
               <Button
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white mt-4"
+                className="w-full bg-navy hover:bg-navy-dark text-white font-semibold text-xs shadow-sm mt-4"
                 onClick={handleSimulateSale}
                 disabled={saleLoading || !canSimulateSale}
               >
                 {saleLoading
-                  ? 'Calculating...'
+                  ? 'Simulating Demand...'
                   : !canSimulateSale
                   ? 'Demand Simulation Unauthorized'
                   : 'Run Demand Simulation'}
               </Button>
               {!canSimulateSale && (
-                <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 p-2 rounded mt-2">
                   Requires Sales Team role (sales:read permission).
                 </p>
               )}
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Projected Inventory Impact</CardTitle>
+          <Card className="lg:col-span-2 border-bluegray/40 shadow-sm bg-white">
+            <CardHeader className="border-b border-bluegray/20 pb-3">
+              <CardTitle className="text-sm font-bold text-navy">Projected Demand Fulfillment</CardTitle>
+              <CardDescription className="text-xs text-navy/60">Calculated inventory deltas and stockouts</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               {!saleResult ? (
-                <div className="py-12 text-center text-slate-400 text-sm">
-                  Add items on the left to project dispatch impact.
+                <div className="py-16 text-center text-navy/50 text-xs font-semibold">
+                  Add items on the left to project dispatch availability.
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="border rounded-md overflow-hidden">
+                  <div className="border border-bluegray/30 rounded-md overflow-hidden">
                     <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Item</TableHead>
-                          <TableHead>Current Stock</TableHead>
-                          <TableHead>Requested Demand</TableHead>
-                          <TableHead>Projected Balance</TableHead>
-                          <TableHead>Fulfillable Status</TableHead>
+                      <TableHeader className="bg-cream/50">
+                        <TableRow className="border-b border-bluegray/30">
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Item</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Current Stock</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Requested Demand</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Projected Balance</TableHead>
+                          <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Fulfillable Status</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {saleResult.items.map((it) => (
-                          <TableRow key={it.itemId}>
-                            <TableCell className="font-medium">{it.name} ({it.sku})</TableCell>
-                            <TableCell>{it.currentStock} {it.unit}</TableCell>
-                            <TableCell>{it.requestedQuantity} {it.unit}</TableCell>
-                            <TableCell className={it.isShortage ? 'text-rose-600 font-semibold' : 'text-slate-700'}>
+                          <TableRow key={it.itemId} className="border-b border-bluegray/20 hover:bg-cream/20">
+                            <TableCell className="font-semibold text-xs text-navy py-2.5">{it.name} ({it.sku})</TableCell>
+                            <TableCell className="font-mono text-xs text-navy py-2.5">{it.currentStock} {it.unit}</TableCell>
+                            <TableCell className="font-mono text-xs text-navy py-2.5">{it.requestedQuantity} {it.unit}</TableCell>
+                            <TableCell className={`font-mono text-xs font-bold py-2.5 ${it.isShortage ? 'text-rose-600' : 'text-navy'}`}>
                               {it.projectedBalance} {it.unit}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-2.5">
                               {it.isShortage ? (
-                                <Badge className="bg-rose-600">Shortage ({it.shortageQuantity} {it.unit})</Badge>
+                                <Badge className="bg-rose-100 text-rose-800 border-rose-300 hover:bg-rose-100 text-[10px]">
+                                  Shortage ({it.shortageQuantity} {it.unit})
+                                </Badge>
                               ) : (
-                                <Badge variant="outline" className="text-emerald-600">Fulfillable</Badge>
+                                <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-300 text-[10px]">
+                                  Fulfillable
+                                </Badge>
                               )}
                             </TableCell>
                           </TableRow>
@@ -425,26 +458,27 @@ export const SimulatorPage = () => {
       {activeTab === 'intelligence' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2 text-amber-600">
-                  <AlertTriangle className="h-4 w-4" /> Low Stock & Shortage Alerts
+            <Card className="border-bluegray/40 shadow-sm bg-white">
+              <CardHeader className="border-b border-bluegray/20 pb-3">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-rose-800">
+                  <AlertTriangle className="h-4 w-4 text-rose-600" /> Low Stock & Shortage Alerts
                 </CardTitle>
+                <CardDescription className="text-xs text-navy/60">Inventory items critically below safety thresholds</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 {!intelligenceData?.lowStockAlerts || intelligenceData.lowStockAlerts.length === 0 ? (
-                  <div className="text-sm text-slate-500">No items currently below reorder levels.</div>
+                  <div className="text-xs text-navy/60 py-8 text-center font-medium">All items are currently at healthy buffer levels.</div>
                 ) : (
                   <div className="space-y-2">
                     {intelligenceData.lowStockAlerts.map((a) => (
-                      <div key={a.id} className="p-3 border rounded-lg flex justify-between items-center text-sm">
+                      <div key={a.id} className="p-3 border border-bluegray/30 rounded-lg flex justify-between items-center bg-cream/20">
                         <div>
-                          <div className="font-medium">{a.name} ({a.sku})</div>
-                          <div className="text-xs text-slate-500">
-                            Current: {a.currentStock} {a.unit} | Reorder Level: {a.reorderLevel} {a.unit}
+                          <div className="font-semibold text-xs text-navy">{a.name} ({a.sku})</div>
+                          <div className="text-[11px] font-mono text-navy/70 mt-0.5">
+                            Current: <span className="font-bold text-rose-600">{a.currentStock} {a.unit}</span> | Reorder Level: {a.reorderLevel} {a.unit}
                           </div>
                         </div>
-                        <Badge className={a.severity === 'CRITICAL' ? 'bg-rose-600' : 'bg-amber-500'}>
+                        <Badge className={a.severity === 'CRITICAL' ? 'bg-rose-100 text-rose-800 border-rose-300 text-[10px]' : 'bg-amber-100 text-amber-800 border-amber-300 text-[10px]'}>
                           {a.severity}
                         </Badge>
                       </div>
@@ -454,24 +488,25 @@ export const SimulatorPage = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2 text-indigo-600">
-                  <Lightbulb className="h-4 w-4" /> Recommended Purchase Reorders
+            <Card className="border-bluegray/40 shadow-sm bg-white">
+              <CardHeader className="border-b border-bluegray/20 pb-3">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-navy">
+                  <Lightbulb className="h-4 w-4 text-amber-600" /> Recommended Purchase Reorders
                 </CardTitle>
+                <CardDescription className="text-xs text-navy/60">Algorithmic replenishment recommendations based on lead times</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 {!intelligenceData?.recommendations || intelligenceData.recommendations.length === 0 ? (
-                  <div className="text-sm text-slate-500">No purchase recommendations at this time.</div>
+                  <div className="text-xs text-navy/60 py-8 text-center font-medium">No procurement replenishment recommended at this time.</div>
                 ) : (
                   <div className="space-y-2">
                     {intelligenceData.recommendations.map((r, i) => (
-                      <div key={i} className="p-3 border rounded-lg text-sm space-y-1">
-                        <div className="flex justify-between font-medium">
+                      <div key={i} className="p-3 border border-bluegray/30 rounded-lg bg-cream/20 space-y-1">
+                        <div className="flex justify-between font-semibold text-xs text-navy">
                           <span>{r.name}</span>
-                          <span className="text-indigo-600 font-semibold">Order ~{r.recommendedOrderQuantity} {r.unit}</span>
+                          <span className="text-navy font-bold font-mono">Order ~{r.recommendedOrderQuantity} {r.unit}</span>
                         </div>
-                        <div className="text-xs text-slate-500">{r.reason}</div>
+                        <div className="text-[11px] text-navy/70">{r.reason}</div>
                       </div>
                     ))}
                   </div>

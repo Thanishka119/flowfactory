@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Menu, LogOut, ChevronDown, User } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Menu, LogOut, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,31 +11,61 @@ interface TopbarProps {
 
 export function Topbar({ onMenuClick }: TopbarProps) {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const displayName =
     user?.firstName && user?.lastName
       ? `${user.firstName} ${user.lastName}`
-      : user?.email ?? 'User';
+      : user?.email ?? 'Operator';
 
   const handleLogout = async () => {
     setUserMenuOpen(false);
     await logout();
   };
 
+  const getPageTitle = (path: string) => {
+    if (path.startsWith('/inventory')) return 'Inventory Management';
+    if (path.startsWith('/suppliers')) return 'Supplier Directory';
+    if (path.startsWith('/purchases')) return 'Purchase Orders';
+    if (path.startsWith('/invoices')) return 'Invoice OCR & Verification';
+    if (path.startsWith('/production')) return 'Production Workflow';
+    if (path.startsWith('/sales')) return 'Sales & Fulfillment';
+    if (path.startsWith('/simulator')) return 'What-If Simulator';
+    if (path.startsWith('/reports')) return 'Reports & Analytics';
+    if (path.startsWith('/users')) return 'User Administration';
+    return 'Operations Dashboard';
+  };
+
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md px-4 sm:px-6 shrink-0">
+    <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-bluegray/40 bg-white/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 shrink-0">
       {/* Mobile hamburger */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden p-1.5 rounded-md text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        className="lg:hidden p-2 rounded-md text-navy hover:bg-cream transition-colors"
         aria-label="Open sidebar"
       >
         <Menu className="h-5 w-5" />
       </button>
 
+      {/* Page Context Breadcrumb */}
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-mono font-medium text-navy/40 uppercase tracking-widest hidden sm:inline">
+          Workspace /
+        </span>
+        <h2 className="text-sm sm:text-base font-bold text-navy tracking-tight">
+          {getPageTitle(location.pathname)}
+        </h2>
+      </div>
+
       {/* Spacer */}
       <div className="flex-1" />
+
+      {/* System Status Pill */}
+      <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-cream-light border border-bluegray/40 text-[11px] font-mono text-navy">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        <span>FLOW SYSTEM ACTIVE</span>
+      </div>
 
       {/* User menu */}
       <div className="relative">
@@ -43,21 +74,21 @@ export function Topbar({ onMenuClick }: TopbarProps) {
           aria-expanded={userMenuOpen}
           aria-haspopup="true"
           className={cn(
-            'flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
-            'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700',
+            'flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-all',
+            'text-navy hover:bg-cream/60 border border-transparent hover:border-bluegray/40',
           )}
         >
           {/* Avatar */}
-          <div className="h-7 w-7 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center shrink-0">
-            <User className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+          <div className="h-8 w-8 rounded-md bg-navy text-beige flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+            {displayName.charAt(0).toUpperCase()}
           </div>
 
           <div className="hidden sm:block text-left leading-tight">
-            <div className="font-medium text-neutral-900 dark:text-white truncate max-w-[140px]">
+            <div className="font-semibold text-navy text-xs truncate max-w-[130px]">
               {displayName}
             </div>
             {user?.role && (
-              <div className="text-[11px] text-slate-500 truncate max-w-[140px]">
+              <div className="text-[10px] font-mono text-bluegray-dark uppercase truncate max-w-[130px]">
                 {user.role}
               </div>
             )}
@@ -65,7 +96,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
 
           <ChevronDown
             className={cn(
-              'h-3.5 w-3.5 text-slate-400 transition-transform duration-150 hidden sm:block',
+              'h-3.5 w-3.5 text-navy/50 transition-transform duration-150 hidden sm:block',
               userMenuOpen && 'rotate-180',
             )}
           />
@@ -74,30 +105,34 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         {/* Dropdown */}
         {userMenuOpen && (
           <>
-            {/* Click-away overlay */}
             <div
               className="fixed inset-0 z-10"
               onClick={() => setUserMenuOpen(false)}
               aria-hidden="true"
             />
-            <div className="absolute right-0 z-20 mt-1.5 w-48 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg py-1.5 text-sm">
-              {/* User info */}
-              <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
-                <p className="font-medium text-slate-900 dark:text-white truncate">
+            <div className="absolute right-0 z-20 mt-1.5 w-56 rounded-lg border border-bluegray/40 bg-white shadow-lg py-1.5 text-sm">
+              <div className="px-3.5 py-2.5 border-b border-bluegray/20 mb-1">
+                <p className="font-semibold text-navy text-xs truncate">
                   {displayName}
                 </p>
-                <p className="text-xs text-slate-500 truncate">{user?.email}</p>
+                <p className="text-[11px] text-navy/60 truncate mt-0.5">{user?.email}</p>
+                <div className="flex items-center gap-1 mt-1.5 pt-1.5 border-t border-bluegray/10 text-[10px] font-mono text-[#2F344F]">
+                  <ShieldCheck className="h-3 w-3 text-navy shrink-0" />
+                  <span className="truncate">{user?.role ?? 'OPERATOR'}</span>
+                </div>
               </div>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start gap-2 px-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-none"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4" />
-                Sign out
-              </Button>
+              <div className="px-1.5">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start gap-2 text-rose-700 hover:text-rose-800 hover:bg-rose-50 rounded-md text-xs font-medium"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Sign out
+                </Button>
+              </div>
             </div>
           </>
         )}

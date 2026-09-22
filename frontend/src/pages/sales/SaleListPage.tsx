@@ -21,36 +21,36 @@ export const SaleListPage = () => {
   const getStatusBadge = (status: SaleStatus) => {
     switch (status) {
       case 'PENDING':
-        return <Badge className="bg-amber-500">PENDING</Badge>;
+        return <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 font-mono text-[10px] font-semibold">PENDING DISPATCH</Badge>;
       case 'COMPLETED':
-        return <Badge className="bg-emerald-600">COMPLETED</Badge>;
+        return <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-300 font-mono text-[10px] font-semibold">FULFILLED & DISPATCHED</Badge>;
       case 'CANCELLED':
-        return <Badge className="bg-rose-600">CANCELLED</Badge>;
+        return <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200 font-mono text-[10px]">CANCELLED</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline" className="text-[10px] font-mono">{status}</Badge>;
     }
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-lg border border-bluegray/40 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Sales Orders</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Manage customer sales orders and finished goods dispatch.
+          <h1 className="text-2xl font-bold tracking-tight text-navy">Sales & Dispatch Orders</h1>
+          <p className="text-xs text-navy/70 mt-0.5">
+            Customer order fulfillment, stock depletion, and dispatch logistics
           </p>
         </div>
-        <Button onClick={() => navigate('/sales/new')}>
-          <Plus className="mr-2 h-4 w-4" /> New Sale Order
+        <Button onClick={() => navigate('/sales/new')} className="bg-navy hover:bg-navy-dark text-white text-xs font-semibold shadow-sm">
+          <Plus className="mr-1.5 h-4 w-4" /> New Sales Order
         </Button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-bluegray-dark" />
           <Input
             placeholder="Search by sale # or customer name..."
-            className="pl-8"
+            className="pl-9 bg-white border-bluegray/50 focus:border-navy text-xs"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -58,7 +58,7 @@ export const SaleListPage = () => {
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="flex h-10 w-full sm:w-48 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
+          className="flex h-10 w-full sm:w-48 rounded-md border border-bluegray/50 bg-white px-3 py-2 text-xs font-medium text-navy focus:outline-none focus:ring-1 focus:ring-navy"
         >
           <option value="">All Statuses</option>
           <option value="PENDING">Pending</option>
@@ -67,48 +67,53 @@ export const SaleListPage = () => {
         </select>
       </div>
 
-      <div className="border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 overflow-hidden">
+      <div className="border border-bluegray/40 rounded-lg bg-white overflow-hidden shadow-sm">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-cream/40">
             <TableRow>
-              <TableHead>Sale #</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Total Amount</TableHead>
-              <TableHead>Items Count</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Sale #</TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Customer Name</TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Total Value</TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Items</TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Status</TableHead>
+              <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Order Date</TableHead>
+              <TableHead className="text-right text-[11px] font-semibold uppercase tracking-wider text-navy/70">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={7} className="text-center py-12 text-navy/50 text-xs font-mono uppercase">
                   Loading sales orders...
                 </TableCell>
               </TableRow>
             ) : !sales || sales.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={7} className="text-center py-12 text-navy/60 text-xs font-medium">
                   No sales orders found. Create your first sale order to dispatch finished goods.
                 </TableCell>
               </TableRow>
             ) : (
               sales.map((sale) => (
-                <TableRow key={sale.id}>
-                  <TableCell className="font-semibold">{sale.saleNumber}</TableCell>
-                  <TableCell className="font-medium">{sale.customerName}</TableCell>
-                  <TableCell>${Number(sale.totalAmount).toFixed(2)}</TableCell>
-                  <TableCell>{sale.items?.length || 0} line(s)</TableCell>
+                <TableRow key={sale.id} className="border-b border-bluegray/15 hover:bg-cream/20 transition-colors">
+                  <TableCell className="font-mono text-xs font-semibold text-navy">
+                    <span onClick={() => navigate(`/sales/${sale.id}`)} className="cursor-pointer hover:underline">
+                      {sale.saleNumber}
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-semibold text-xs text-navy">{sale.customerName}</TableCell>
+                  <TableCell className="font-mono text-xs font-bold text-navy">${Number(sale.totalAmount).toFixed(2)}</TableCell>
+                  <TableCell className="text-xs text-navy/70 font-mono">{sale.items?.length || 0} line(s)</TableCell>
                   <TableCell>{getStatusBadge(sale.status)}</TableCell>
-                  <TableCell>{new Date(sale.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-xs text-navy/70 font-mono">{new Date(sale.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => navigate(`/sales/${sale.id}`)}
+                      className="text-navy hover:bg-cream/40 text-xs font-semibold"
                     >
-                      <Eye className="h-4 w-4 mr-1" /> View
+                      <Eye className="h-3.5 w-3.5 mr-1 text-navy" /> Inspect
                     </Button>
                   </TableCell>
                 </TableRow>
