@@ -2,7 +2,8 @@ import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { tokenStorage } from '@/lib/tokenStorage';
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+  import.meta.env.VITE_API_URL ||
+  'https://flowfactory-api.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
