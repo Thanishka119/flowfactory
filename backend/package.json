@@ -6,7 +6,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "rimraf dist && tsc",
+    "build": "node --eval \"require('fs').rmSync('dist', {recursive:true, force:true})\" && tsc",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -36,7 +36,6 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.13.5",
     "prisma": "^6.19.3",
-    "rimraf": "^6.0.1",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "vitest": "^4.1.11"
