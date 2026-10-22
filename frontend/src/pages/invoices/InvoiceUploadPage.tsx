@@ -13,17 +13,26 @@ export const InvoiceUploadPage = () => {
   const handleUpload = () => {
     if (!file) return;
 
-    // In a real app, you would upload the file to S3/storage first,
-    // then pass the metadata to the backend.
-    // For this UI mockup based on provided types, we simulate it:
-    createMutation.mutate({
-      originalFilename: file.name,
-      // supplierId, purchaseId, items could be added manually here or parsed by backend
-    }, {
-      onSuccess: (data) => {
-        navigate(`/invoices/${data.data?.id}`);
-      }
-    });
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64Data = result.includes(',') ? result.split(',')[1] : result;
+
+      createMutation.mutate(
+        {
+          originalFilename: file.name,
+          fileSize: file.size,
+          mimeType: file.type || 'application/pdf',
+          fileData: base64Data,
+        },
+        {
+          onSuccess: (data) => {
+            navigate(`/invoices/${data.data?.id}`);
+          },
+        }
+      );
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -61,7 +70,7 @@ export const InvoiceUploadPage = () => {
           {file && (
             <div className="p-3 bg-cream/40 border border-bluegray/30 rounded-md flex justify-between items-center text-xs">
               <span className="font-semibold text-navy font-mono">{file.name}</span>
-              <span className="text-navy/60 font-mono">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+              <span className="text-navy/60 font-mono">{(file.size / 1024).toFixed(2)} KB</span>
             </div>
           )}
 
@@ -70,7 +79,7 @@ export const InvoiceUploadPage = () => {
               Cancel
             </Button>
             <Button onClick={handleUpload} disabled={!file || createMutation.isPending} className="bg-navy hover:bg-navy-dark text-white text-xs font-semibold shadow-sm">
-              {createMutation.isPending ? 'Uploading...' : 'Upload and Ingest Document'}
+              {createMutation.isPending ? 'Uploading & Ingesting...' : 'Upload and Ingest Document'}
             </Button>
           </div>
         </CardContent>

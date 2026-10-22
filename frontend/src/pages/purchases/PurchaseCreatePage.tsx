@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Trash2, Plus, AlertCircle, ArrowLeft } from 'lucide-react';
+import { formatINR } from '@/lib/utils';
 
 const formSchema = z.object({
   supplierId: z.string().min(1, 'Supplier is required'),
@@ -152,7 +153,7 @@ export const PurchaseCreatePage = () => {
                     <TableRow>
                       <TableHead className="w-[40%] text-[11px] font-semibold uppercase tracking-wider text-navy/70">Inventory Item *</TableHead>
                       <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Quantity *</TableHead>
-                      <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Unit Price ($) *</TableHead>
+                      <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Unit Price (₹) *</TableHead>
                       <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-navy/70">Line Total</TableHead>
                       <TableHead className="w-16"></TableHead>
                     </TableRow>
@@ -217,7 +218,7 @@ export const PurchaseCreatePage = () => {
                               )}
                             />
                           </TableCell>
-                          <TableCell className="font-mono text-xs font-bold text-navy">${total}</TableCell>
+                          <TableCell className="font-mono text-xs font-bold text-navy">{formatINR(total)}</TableCell>
                           <TableCell>
                             <Button
                               type="button"
@@ -237,7 +238,7 @@ export const PurchaseCreatePage = () => {
                 </Table>
               </div>
               <div className="flex justify-end p-4 border-t border-bluegray/20 bg-cream/20 text-sm font-bold font-mono text-navy">
-                Grand Total: ${calculateTotal()}
+                Grand Total: {formatINR(calculateTotal())}
               </div>
             </CardContent>
           </Card>

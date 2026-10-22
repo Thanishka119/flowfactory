@@ -10,6 +10,7 @@ import saleRoutes from './sale.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import simulatorRoutes from './simulator.routes.js';
 import userRoutes from './user.routes.js';
+import adminRoutes from './adminFeatures.routes.js';
 
 const apiRouter = Router();
 
@@ -24,5 +25,6 @@ apiRouter.use('/production', productionRoutes);
 apiRouter.use('/sales', saleRoutes);
 apiRouter.use('/dashboard', dashboardRoutes);
 apiRouter.use('/simulator', simulatorRoutes);
+apiRouter.use('/admin', adminRoutes);
 
 export default apiRouter;

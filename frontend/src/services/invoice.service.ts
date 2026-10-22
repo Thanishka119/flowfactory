@@ -4,6 +4,7 @@ import type {
   Invoice,
   CreateInvoiceRequest,
   VerifyInvoiceRequest,
+  CreateItemFromInvoiceRequest,
 } from '@/types/invoice';
 
 export interface InvoiceListParams {
@@ -38,6 +39,11 @@ export const invoiceService = {
 
   process: async (id: string): Promise<ApiResponse<Invoice>> => {
     const response = await apiClient.post<ApiResponse<Invoice>>(`/invoices/${id}/process`);
+    return response.data;
+  },
+
+  createItem: async (invoiceId: string, data: CreateItemFromInvoiceRequest): Promise<ApiResponse<any>> => {
+    const response = await apiClient.post<ApiResponse<any>>(`/invoices/${invoiceId}/create-item`, data);
     return response.data;
   },
 };

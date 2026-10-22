@@ -3,6 +3,7 @@ import { usePurchase, useReceivePurchase, useCancelPurchase } from '@/hooks/useP
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatINR } from '@/lib/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 
@@ -89,7 +90,7 @@ export const PurchaseDetailPage = () => {
           <CardContent className="space-y-3 pt-4 text-xs">
             <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Order Date</span><span className="font-mono text-navy font-semibold">{new Date(purchase.createdAt).toLocaleDateString()}</span></div>
             <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Invoice Number</span><span className="font-mono text-navy font-bold">{purchase.invoiceNumber || 'N/A'}</span></div>
-            <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Total Invoiced Amount</span><span className="font-mono font-bold text-navy text-sm">${parseFloat(purchase.totalAmount).toFixed(2)}</span></div>
+            <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Total Invoiced Amount</span><span className="font-mono font-bold text-navy text-sm">{formatINR(parseFloat(purchase.totalAmount))}</span></div>
             {purchase.status === 'RECEIVED' && purchase.receivedBy && (
               <div className="flex justify-between border-b border-bluegray/10 pb-2"><span className="text-navy/60 font-medium">Received By</span><span className="font-semibold text-navy">{purchase.receivedBy.firstName} {purchase.receivedBy.lastName}</span></div>
             )}
@@ -131,8 +132,8 @@ export const PurchaseDetailPage = () => {
                     <TableCell className="font-mono text-xs font-semibold text-navy">{item.item.sku}</TableCell>
                     <TableCell className="font-semibold text-xs text-navy">{item.item.name}</TableCell>
                     <TableCell className="font-mono text-xs text-navy font-bold">{item.quantity} {item.item.unit}</TableCell>
-                    <TableCell className="font-mono text-xs text-navy">${parseFloat(item.unitPrice).toFixed(2)}</TableCell>
-                    <TableCell className="text-right font-mono text-xs font-bold text-navy">${parseFloat(item.totalPrice).toFixed(2)}</TableCell>
+                    <TableCell className="font-mono text-xs text-navy">{formatINR(parseFloat(item.unitPrice))}</TableCell>
+                    <TableCell className="text-right font-mono text-xs font-bold text-navy">{formatINR(parseFloat(item.totalPrice))}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

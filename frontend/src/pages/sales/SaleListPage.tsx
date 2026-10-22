@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Search, Eye } from 'lucide-react';
 import type { SaleStatus } from '@/types/sale';
+import { formatINR } from '@/lib/utils';
 
 export const SaleListPage = () => {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ export const SaleListPage = () => {
                     </span>
                   </TableCell>
                   <TableCell className="font-semibold text-xs text-navy">{sale.customerName}</TableCell>
-                  <TableCell className="font-mono text-xs font-bold text-navy">${Number(sale.totalAmount).toFixed(2)}</TableCell>
+                  <TableCell className="font-mono text-xs font-bold text-navy">{formatINR(Number(sale.totalAmount))}</TableCell>
                   <TableCell className="text-xs text-navy/70 font-mono">{sale.items?.length || 0} line(s)</TableCell>
                   <TableCell>{getStatusBadge(sale.status)}</TableCell>
                   <TableCell className="text-xs text-navy/70 font-mono">{new Date(sale.createdAt).toLocaleDateString()}</TableCell>

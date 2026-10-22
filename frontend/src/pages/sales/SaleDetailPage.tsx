@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowLeft, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 import type { SaleStatus } from '@/types/sale';
+import { formatINR } from '@/lib/utils';
 
 export const SaleDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -129,7 +130,7 @@ export const SaleDetailPage = () => {
             <div className="p-3 bg-cream/30 rounded border border-bluegray/20">
               <div className="text-[11px] text-navy/60 uppercase font-semibold">Order Value</div>
               <div className="text-xl font-bold font-mono text-emerald-700 mt-1">
-                ${Number(sale.totalAmount).toFixed(2)}
+                {formatINR(Number(sale.totalAmount))}
               </div>
             </div>
             <div className="p-3 bg-cream/30 rounded border border-bluegray/20">
@@ -180,9 +181,9 @@ export const SaleDetailPage = () => {
                     <TableCell className="font-mono text-xs font-bold text-navy">
                       {Number(item.quantity)} {item.item.unit}
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-navy">${Number(item.unitPrice).toFixed(2)}</TableCell>
+                    <TableCell className="font-mono text-xs text-navy">{formatINR(Number(item.unitPrice))}</TableCell>
                     <TableCell className="text-right font-mono text-xs font-bold text-navy">
-                      ${Number(item.totalPrice).toFixed(2)}
+                      {formatINR(Number(item.totalPrice))}
                     </TableCell>
                   </TableRow>
                 ))}

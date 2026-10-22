@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Upload, Search, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { formatINR } from '@/lib/utils';
 
 export const InvoiceListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -90,7 +91,13 @@ export const InvoiceListPage = () => {
                   <TableCell>
                     {getStatusBadge(invoice.status)}
                   </TableCell>
-                  <TableCell className="font-mono text-xs font-bold text-navy">{invoice.totalAmount ? `$${parseFloat(invoice.totalAmount).toFixed(2)}` : '—'}</TableCell>
+                  <TableCell className="font-mono text-xs font-bold text-navy">
+                    {invoice.totalAmount
+                      ? (invoice.ocrRawData?.currency && invoice.ocrRawData.currency !== 'Rs' && invoice.ocrRawData.currency !== 'INR' && invoice.ocrRawData.currency !== '₹'
+                          ? `${invoice.ocrRawData.currency} ${parseFloat(invoice.totalAmount).toFixed(2)}`
+                          : formatINR(parseFloat(invoice.totalAmount)))
+                      : '—'}
+                  </TableCell>
                   <TableCell className="text-xs text-navy/70 font-mono">{new Date(invoice.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
                     <Link to={`/invoices/${invoice.id}`}>

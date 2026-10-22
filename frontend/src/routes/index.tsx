@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { RootLayout } from '@/layouts/RootLayout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { AdminRoute } from '@/components/auth/AdminRoute';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
@@ -39,6 +40,9 @@ import {
 import { SimulatorPage } from '@/pages/SimulatorPage';
 import { ReportsPage } from '@/pages/ReportsPage';
 import { UsersPage } from '@/pages/UsersPage';
+import { ShortageRescuePage } from '@/pages/admin/ShortageRescuePage';
+import { ExpiryPlannerPage } from '@/pages/admin/ExpiryPlannerPage';
+import { RecoveryResalePage } from '@/pages/admin/RecoveryResalePage';
 
 export const router = createBrowserRouter([
   // ----------------------------------------------------------------
@@ -68,7 +72,7 @@ export const router = createBrowserRouter([
             path: 'dashboard',
             element: <DashboardPage />,
           },
-          // Inventory management routes (M7)
+          // Inventory management routes
           {
             path: 'inventory',
             element: <InventoryListPage />,
@@ -128,7 +132,7 @@ export const router = createBrowserRouter([
             path: 'invoices/:id',
             element: <InvoiceDetailPage />,
           },
-          // Production management routes (M12-M13)
+          // Production management routes
           {
             path: 'production',
             element: <ProductionListPage />,
@@ -141,7 +145,7 @@ export const router = createBrowserRouter([
             path: 'production/:id',
             element: <ProductionDetailPage />,
           },
-          // Sales management routes (M14-M15)
+          // Sales management routes
           {
             path: 'sales',
             element: <SaleListPage />,
@@ -154,12 +158,12 @@ export const router = createBrowserRouter([
             path: 'sales/:id',
             element: <SaleDetailPage />,
           },
-          // What-If Simulator & Operational Intelligence (M20-M21)
+          // What-If Simulator & Operational Intelligence
           {
             path: 'simulator',
             element: <SimulatorPage />,
           },
-          // Reports & Analytics (M16-M17)
+          // Reports & Analytics
           {
             path: 'reports',
             element: <ReportsPage />,
@@ -168,6 +172,26 @@ export const router = createBrowserRouter([
           {
             path: 'users',
             element: <UsersPage />,
+          },
+          // --------------------------------------------------------------
+          // Three New Admin-Only Business Features (Enforced via AdminRoute)
+          // --------------------------------------------------------------
+          {
+            element: <AdminRoute />,
+            children: [
+              {
+                path: 'shortage-rescue',
+                element: <ShortageRescuePage />,
+              },
+              {
+                path: 'expiry-planner',
+                element: <ExpiryPlannerPage />,
+              },
+              {
+                path: 'recovery-resale',
+                element: <RecoveryResalePage />,
+              },
+            ],
           },
           // Catch-all within authenticated shell
           {

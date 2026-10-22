@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { usePurchaseList } from '@/hooks/usePurchases';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { formatINR } from '@/lib/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Search, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -84,7 +85,7 @@ export const PurchaseListPage = () => {
                   <TableCell>
                     {getStatusBadge(purchase.status)}
                   </TableCell>
-                  <TableCell className="font-mono text-xs font-bold text-navy">${parseFloat(purchase.totalAmount).toFixed(2)}</TableCell>
+                  <TableCell className="font-mono text-xs font-bold text-navy">{formatINR(parseFloat(purchase.totalAmount))}</TableCell>
                   <TableCell className="text-xs text-navy/70 font-mono">{new Date(purchase.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
                     <Link to={`/purchases/${purchase.id}`}>

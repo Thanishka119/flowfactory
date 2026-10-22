@@ -6,6 +6,7 @@ import {
   createInvoice,
   verifyInvoice,
   processInvoice,
+  createItemFromInvoice,
 } from '../controllers/invoice.controller.js';
 
 const router = Router();
@@ -17,5 +18,6 @@ router.get('/:id', requirePermission('purchases:read'), getInvoice);
 router.post('/', requirePermission('invoices:upload'), createInvoice);
 router.post('/:id/process', requirePermission('invoices:upload'), processInvoice);
 router.post('/:id/verify', requirePermission('invoices:verify'), verifyInvoice);
+router.post('/:id/create-item', requirePermission('inventory:create'), createItemFromInvoice);
 
 export default router;

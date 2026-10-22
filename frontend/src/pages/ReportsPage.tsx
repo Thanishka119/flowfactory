@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Filter } from 'lucide-react';
+import { formatINR } from '@/lib/utils';
 
 export const ReportsPage = () => {
   const [reportType, setReportType] = useState<ReportFilterParams['type']>('inventory');
@@ -220,7 +221,7 @@ export const ReportsPage = () => {
                           <TableCell className="font-mono text-xs font-bold text-navy py-3">{row.purchaseNumber}</TableCell>
                           <TableCell className="text-xs font-semibold text-navy py-3">{row.supplier?.name}</TableCell>
                           <TableCell className="text-xs font-mono font-bold text-navy py-3">
-                            ${Number(row.totalAmount).toFixed(2)}
+                            {formatINR(Number(row.totalAmount))}
                           </TableCell>
                           <TableCell className="py-3">
                             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-bluegray/15 text-navy border border-bluegray/30">
@@ -254,7 +255,7 @@ export const ReportsPage = () => {
                           <TableCell className="font-mono text-xs font-bold text-navy py-3">{row.saleNumber}</TableCell>
                           <TableCell className="text-xs font-semibold text-navy py-3">{row.customerName}</TableCell>
                           <TableCell className="text-xs font-mono font-bold text-navy py-3">
-                            ${Number(row.totalAmount).toFixed(2)}
+                            {formatINR(Number(row.totalAmount))}
                           </TableCell>
                           <TableCell className="py-3">
                             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-bluegray/15 text-navy border border-bluegray/30">

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoiceService, type InvoiceListParams } from '@/services/invoice.service';
-import type { CreateInvoiceRequest, VerifyInvoiceRequest } from '@/types/invoice';
+import type { CreateInvoiceRequest, VerifyInvoiceRequest, CreateItemFromInvoiceRequest } from '@/types/invoice';
 
 export const invoiceKeys = {
   all: ['invoices'] as const,
@@ -63,6 +63,19 @@ export function useProcessInvoice() {
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: invoiceKeys.lists() });
       queryClient.invalidateQueries({ queryKey: invoiceKeys.detail(id) });
+    },
+  });
+}
+
+export function useCreateItemFromInvoice() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ invoiceId, data }: { invoiceId: string; data: CreateItemFromInvoiceRequest }) =>
+      invoiceService.createItem(invoiceId, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: invoiceKeys.detail(variables.invoiceId) });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
     },
   });
 }

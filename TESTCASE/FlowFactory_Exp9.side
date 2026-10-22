@@ -1,0 +1,1154 @@
+{
+  "id": "d66b5768-c9a5-41cd-8636-b3df339a5c21",
+  "version": "3.0",
+  "name": "FlowFactory_Exp9",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "009834c4-64e3-46de-bfc7-7f7440f56141",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "d6334917-796b-4aab-b722-f4c692621f59"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "d6334917-796b-4aab-b722-f4c692621f59",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "1b926804-d0ad-408b-8d07-91e13bb7322a",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "e5762233-16c5-4174-8b67-6a95405b5105",
+      "name": "TC01_Valid_Login",
+      "commands": [
+        {
+          "id": "90c65faf-013a-4aa1-b0fb-edcc9585c115",
+          "command": "open",
+          "target": "http://localhost:5173/login",
+          "value": "",
+          "isBreakpoint": true
+        },
+        {
+          "command": "click",
+          "target": "id=email",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "77435b40-7e33-45af-a963-a7372ff70e43",
+          "targets": [
+            [
+              "id=email",
+              "id"
+            ],
+            [
+              "name=email",
+              "name"
+            ],
+            [
+              "css=#email",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='email'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=password",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "09175ffb-5a7b-4359-882e-aae58155bafb",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div[2]/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=password",
+          "value": "AdminPassword123!",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c7ad819e-7f8a-4968-a993-abe911df1db1",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div[2]/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=email",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "e0c8443f-e1f9-4c41-86e0-da98d0f79b92",
+          "targets": [
+            [
+              "id=email",
+              "id"
+            ],
+            [
+              "name=email",
+              "name"
+            ],
+            [
+              "css=#email",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='email'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=email",
+          "value": "admin@flowfactory.local",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "fa5b182d-44b1-4dd9-a36f-0b381cb2cd01",
+          "targets": [
+            [
+              "id=email",
+              "id"
+            ],
+            [
+              "name=email",
+              "name"
+            ],
+            [
+              "css=#email",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='email'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.whitespace-nowrap",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "38d1726d-8d65-447b-af5e-58bd84366483",
+          "targets": [
+            [
+              "css=.whitespace-nowrap",
+              "css:finder"
+            ],
+            [
+              "xpath=(//button[@type='submit' and text()='Enter Workspace'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/button)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//button[contains(.,'Enter Workspace')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "runScript",
+          "target": "window.scrollTo(0,0)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "1b0d646e-fb85-49b6-a955-3f2b38924cd3",
+          "targets": [
+            [
+              "window.scrollTo(0,0)",
+              ""
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "987c108a-b5b0-4e1d-b5bb-fc7271c4701e",
+      "name": "TC02_Inventory_Search",
+      "commands": [
+        {
+          "id": "cfacd230-e4a8-4866-9b76-fdc101347304",
+          "command": "open",
+          "target": "http://localhost:5173/login",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "linkText=Inventory",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "fb0597cb-1c58-4e02-9788-eb40f6b8e46a",
+          "targets": [
+            [
+              "linkText=Inventory",
+              "linkText"
+            ],
+            [
+              "css=.space-y-1:nth-child(2) > .flex:nth-child(2)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/aside/nav/div[2]/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/inventory')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Inventory')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.placeholder\\3Atext-bluegray-dark\\/60",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "013dc071-c229-46b0-95c5-dd73dc0579a3",
+          "targets": [
+            [
+              "css=.placeholder\\3Atext-bluegray-dark\\/60",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@value=''])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "css=.placeholder\\3Atext-bluegray-dark\\/60",
+          "value": "bolt",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "f0f5bd13-173a-416d-b0a7-78d67807c82d",
+          "targets": [
+            [
+              "css=.placeholder\\3Atext-bluegray-dark\\/60",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@value='bolt'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "sendKeys",
+          "target": "css=.placeholder\\3Atext-bluegray-dark\\/60",
+          "value": "${KEY_ENTER}",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "564f0e70-0919-45e2-8e8d-b32268057a9e",
+          "targets": [
+            [
+              "css=.placeholder\\3Atext-bluegray-dark\\/60",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@value='bolt'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "430f27bd-bffb-43eb-bd6e-18a10cea6f14",
+      "name": "TC03_Invalid_Login",
+      "commands": [
+        {
+          "id": "886181f8-fa32-4f6e-8413-23343e35ae24",
+          "command": "open",
+          "target": "http://localhost:5173/login",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "id=email",
+          "value": "admin@flowfactory.local",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "374699ff-a3e2-45c1-aef9-1bbb415d09fa",
+          "targets": [
+            [
+              "id=email",
+              "id"
+            ],
+            [
+              "name=email",
+              "name"
+            ],
+            [
+              "css=#email",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='email'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=password",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "eeb74463-2b22-4f75-bc09-4d8117a54516",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div[2]/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=password",
+          "value": "knerifneorig",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "f207a301-5944-4214-b4e8-3f0309e5d1a2",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/div[2]/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.whitespace-nowrap",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "3fc4ec17-f1d7-48d6-a30d-6b4877b0f394",
+          "targets": [
+            [
+              "css=.whitespace-nowrap",
+              "css:finder"
+            ],
+            [
+              "xpath=(//button[@type='submit' and text()='Enter Workspace'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div[2]/div/div/form/button)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//button[contains(.,'Enter Workspace')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ef646ce3-b40a-42be-90f0-d6a51d04db87",
+      "name": "TC04_Add_Inventory_Item",
+      "commands": [
+        {
+          "id": "f38e5315-3ea3-4729-9d22-fa74b2625976",
+          "command": "open",
+          "target": "http://localhost:5173/login",
+          "value": ""
+        },
+        {
+          "command": "runScript",
+          "target": "window.scrollTo(0,353.6000061035156)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9e6e4f2f-526d-4e16-a593-17296e056f37",
+          "targets": [
+            [
+              "window.scrollTo(0,353.6000061035156)",
+              ""
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.text-navy\\/40",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "951556ae-c9ae-416a-9c0c-e96d64e184ef",
+          "targets": [
+            [
+              "css=.text-navy\\/40",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/header/div/span)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.space-y-1:nth-child(2) > .flex:nth-child(2) > .truncate",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9424c3d3-dfad-49e5-8421-2c617195cdbd",
+          "targets": [
+            [
+              "css=.space-y-1:nth-child(2) > .flex:nth-child(2) > .truncate",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/aside/nav/div[2]/a/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Inventory')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.hover\\3A bg-navy-dark",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "0c7c89e2-0976-4575-aeee-6cebaee89b05",
+          "targets": [
+            [
+              "css=.hover\\3A bg-navy-dark",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div/a/button)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//button[contains(.,'Add Item')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=name",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "3acb1fd3-3e45-4606-86c6-93e6063b7a23",
+          "targets": [
+            [
+              "id=name",
+              "id"
+            ],
+            [
+              "name=name",
+              "name"
+            ],
+            [
+              "css=#name",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='name'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=name",
+          "value": "Exp9 Test Washer",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "7392fa13-ca40-4b2e-8759-45de6dbeb7a1",
+          "targets": [
+            [
+              "id=name",
+              "id"
+            ],
+            [
+              "name=name",
+              "name"
+            ],
+            [
+              "css=#name",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='name'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=sku",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ecaea83a-9b87-433a-845b-fd6dfb1521a2",
+          "targets": [
+            [
+              "id=sku",
+              "id"
+            ],
+            [
+              "name=sku",
+              "name"
+            ],
+            [
+              "css=#sku",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='sku'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=sku",
+          "value": "EXP9-WASHER-001",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "79493d96-d3b1-4ad9-a740-4e60967a8ee4",
+          "targets": [
+            [
+              "id=sku",
+              "id"
+            ],
+            [
+              "name=sku",
+              "name"
+            ],
+            [
+              "css=#sku",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='sku'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=category",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "995a854f-3f47-4594-8b85-1d89b26ba6df",
+          "targets": [
+            [
+              "id=category",
+              "id"
+            ],
+            [
+              "name=category",
+              "name"
+            ],
+            [
+              "css=#category",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='category'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[3]/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=category",
+          "value": "Components",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "f10d151a-72fa-4550-ac2d-b3e1b3fd65e4",
+          "targets": [
+            [
+              "id=category",
+              "id"
+            ],
+            [
+              "name=category",
+              "name"
+            ],
+            [
+              "css=#category",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='category'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[3]/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=type",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "0a2de973-7e48-4b6e-8642-d5c4dfb6e04c",
+          "targets": [
+            [
+              "id=type",
+              "id"
+            ],
+            [
+              "name=type",
+              "name"
+            ],
+            [
+              "css=#type",
+              "css:finder"
+            ],
+            [
+              "xpath=(//select[@id='type'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[3]/div[2]/select)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "select",
+          "target": "id=type",
+          "value": "label=Component",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "dc57cfd0-b9a4-460f-8621-178340a9c86f",
+          "targets": [
+            [
+              "id=type",
+              "id"
+            ],
+            [
+              "name=type",
+              "name"
+            ],
+            [
+              "css=#type",
+              "css:finder"
+            ],
+            [
+              "xpath=(//select[@id='type'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[3]/div[2]/select)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=unit",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "0a495b21-4744-4c8c-a4d2-293c0d89038c",
+          "targets": [
+            [
+              "id=unit",
+              "id"
+            ],
+            [
+              "name=unit",
+              "name"
+            ],
+            [
+              "css=#unit",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='unit'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[3]/div[3]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=unit",
+          "value": "UNIT",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "37841e18-60d0-43b1-9908-d79c8982b1a7",
+          "targets": [
+            [
+              "id=unit",
+              "id"
+            ],
+            [
+              "name=unit",
+              "name"
+            ],
+            [
+              "css=#unit",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='unit'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[3]/div[3]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=minStock",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "132cc8df-b143-47c7-b33d-ef93f869403c",
+          "targets": [
+            [
+              "id=minStock",
+              "id"
+            ],
+            [
+              "name=minStock",
+              "name"
+            ],
+            [
+              "css=#minStock",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='minStock'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[4]/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=minStock",
+          "value": "5",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "68fa1c38-9c94-4100-b668-324497c6a6c7",
+          "targets": [
+            [
+              "id=minStock",
+              "id"
+            ],
+            [
+              "name=minStock",
+              "name"
+            ],
+            [
+              "css=#minStock",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='minStock'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[4]/div/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=reorderLevel",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "a8649fb0-209e-45a8-a7c9-075d3942a4b2",
+          "targets": [
+            [
+              "id=reorderLevel",
+              "id"
+            ],
+            [
+              "name=reorderLevel",
+              "name"
+            ],
+            [
+              "css=#reorderLevel",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='reorderLevel'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[4]/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=reorderLevel",
+          "value": "2",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "7590f2e0-067f-4a6f-8830-eed64e3f9dfb",
+          "targets": [
+            [
+              "id=reorderLevel",
+              "id"
+            ],
+            [
+              "name=reorderLevel",
+              "name"
+            ],
+            [
+              "css=#reorderLevel",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='reorderLevel'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[4]/div[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=supplierId",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "05864d21-fafb-444a-8360-578a23ae7a41",
+          "targets": [
+            [
+              "id=supplierId",
+              "id"
+            ],
+            [
+              "name=supplierId",
+              "name"
+            ],
+            [
+              "css=#supplierId",
+              "css:finder"
+            ],
+            [
+              "xpath=(//select[@id='supplierId'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[5]/div/select)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "select",
+          "target": "id=supplierId",
+          "value": "label=Apex Industrial Supplies",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b6b6ace2-d8d6-4d28-81f3-c7ed532f7bd7",
+          "targets": [
+            [
+              "id=supplierId",
+              "id"
+            ],
+            [
+              "name=supplierId",
+              "name"
+            ],
+            [
+              "css=#supplierId",
+              "css:finder"
+            ],
+            [
+              "xpath=(//select[@id='supplierId'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[5]/div/select)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.hover\\3A bg-navy-dark",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9243eeeb-ac8a-4707-848b-673a8fddb01c",
+          "targets": [
+            [
+              "css=.hover\\3A bg-navy-dark",
+              "css:finder"
+            ],
+            [
+              "xpath=(//button[@type='submit' and text()='Register Item'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[6]/button)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//button[contains(.,'Register Item')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "mouseOver",
+          "target": "css=.hover\\3A bg-navy-dark",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ec89f269-2e22-40ea-99f1-cfe47635ee38",
+          "targets": [
+            [
+              "css=.hover\\3A bg-navy-dark",
+              "css:finder"
+            ],
+            [
+              "xpath=(//button[@type='submit' and text()='Register Item'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='root']/div/div/main/div/div[2]/div[2]/form/div[6]/button)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//button[contains(.,'Register Item')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "runScript",
+          "target": "window.scrollTo(0,287.20001220703125)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ea754a7f-ca10-4f4d-9df3-67ab92f54b63",
+          "targets": [
+            [
+              "window.scrollTo(0,287.20001220703125)",
+              ""
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

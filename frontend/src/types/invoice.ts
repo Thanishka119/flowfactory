@@ -71,6 +71,7 @@ export interface Invoice {
 
 export interface CreateInvoiceRequest {
   originalFilename: string;
+  fileData?: string;
   fileUrl?: string;
   fileSize?: number;
   mimeType?: string;
@@ -103,4 +104,16 @@ export interface VerifyInvoiceRequest {
     unitPrice?: number;
     totalPrice?: number;
   }[];
+}
+
+export interface CreateItemFromInvoiceRequest {
+  invoiceItemId: string;
+  name: string;
+  sku: string;
+  category: string;
+  type: 'RAW_MATERIAL' | 'COMPONENT' | 'FINISHED_GOOD' | 'OTHER';
+  unit: string;
+  description?: string;
+  minStock?: number;
+  reorderLevel?: number;
 }

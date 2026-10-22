@@ -85,14 +85,14 @@ export const SimulatorPage = () => {
   };
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 min-w-0 overflow-hidden">
       {/* Page Header */}
-      <div className="flex items-center gap-4 border-b border-bluegray/30 pb-4">
+      <div className="flex items-center gap-4 border-b border-bluegray/30 pb-4 flex-wrap">
         <div className="h-10 w-10 rounded-lg bg-navy text-white flex items-center justify-center shadow-sm">
           <Sparkles className="h-5 w-5 text-beige" />
         </div>
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-2xl font-bold tracking-tight text-navy">What-If Simulator & Intelligence</h1>
             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-bluegray/15 text-navy border border-bluegray/30">
               Predictive Operations
@@ -105,12 +105,12 @@ export const SimulatorPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-bluegray/30 pb-px">
+      <div className="flex gap-2 border-b border-bluegray/30 pb-px overflow-x-auto scrollbar-hide -mx-1 px-1">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setActiveTab('production')}
-          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all ${
+          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all whitespace-nowrap shrink-0 ${
             activeTab === 'production'
               ? 'border-navy text-navy bg-white shadow-sm'
               : 'border-transparent text-navy/60 hover:text-navy hover:bg-cream/40'
@@ -122,7 +122,7 @@ export const SimulatorPage = () => {
           variant="ghost"
           size="sm"
           onClick={() => setActiveTab('sale')}
-          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all ${
+          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all whitespace-nowrap shrink-0 ${
             activeTab === 'sale'
               ? 'border-navy text-navy bg-white shadow-sm'
               : 'border-transparent text-navy/60 hover:text-navy hover:bg-cream/40'
@@ -134,7 +134,7 @@ export const SimulatorPage = () => {
           variant="ghost"
           size="sm"
           onClick={() => setActiveTab('intelligence')}
-          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all ${
+          className={`rounded-b-none border-b-2 text-xs font-semibold px-4 py-2 transition-all whitespace-nowrap shrink-0 ${
             activeTab === 'intelligence'
               ? 'border-navy text-navy bg-white shadow-sm'
               : 'border-transparent text-navy/60 hover:text-navy hover:bg-cream/40'
@@ -244,7 +244,7 @@ export const SimulatorPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2 border-bluegray/40 shadow-sm bg-white">
+          <Card className="lg:col-span-2 border-bluegray/40 shadow-sm bg-white min-w-0">
             <CardHeader className="border-b border-bluegray/20 pb-3">
               <CardTitle className="text-sm font-bold text-navy">Simulation Forecast Outcome</CardTitle>
               <CardDescription className="text-xs text-navy/60">Projected inventory balances, material shortages, and procurement alerts</CardDescription>
@@ -256,7 +256,7 @@ export const SimulatorPage = () => {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-3 gap-4 p-4 rounded-lg bg-cream/40 border border-bluegray/30">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-lg bg-cream/40 border border-bluegray/30">
                     <div>
                       <div className="text-[10px] text-navy/70 uppercase font-bold tracking-wider">Target Finished Good</div>
                       <div className="text-sm font-bold text-navy mt-1">{prodResult.finishedGood.name}</div>
@@ -280,7 +280,7 @@ export const SimulatorPage = () => {
                     </div>
                   )}
 
-                  <div className="border border-bluegray/30 rounded-md overflow-hidden">
+                  <div className="border border-bluegray/30 rounded-md overflow-x-auto">
                     <Table>
                       <TableHeader className="bg-cream/50">
                         <TableRow className="border-b border-bluegray/30">
@@ -400,7 +400,7 @@ export const SimulatorPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2 border-bluegray/40 shadow-sm bg-white">
+          <Card className="lg:col-span-2 border-bluegray/40 shadow-sm bg-white min-w-0">
             <CardHeader className="border-b border-bluegray/20 pb-3">
               <CardTitle className="text-sm font-bold text-navy">Projected Demand Fulfillment</CardTitle>
               <CardDescription className="text-xs text-navy/60">Calculated inventory deltas and stockouts</CardDescription>
@@ -412,7 +412,7 @@ export const SimulatorPage = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="border border-bluegray/30 rounded-md overflow-hidden">
+                  <div className="border border-bluegray/30 rounded-md overflow-x-auto">
                     <Table>
                       <TableHeader className="bg-cream/50">
                         <TableRow className="border-b border-bluegray/30">

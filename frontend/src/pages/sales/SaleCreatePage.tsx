@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { formatINR } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Trash2, Plus, ArrowLeft } from 'lucide-react';
 
@@ -178,7 +179,7 @@ export const SaleCreatePage = () => {
                       <TableHead className="text-navy font-bold text-xs uppercase tracking-wider">Inventory Item</TableHead>
                       <TableHead className="w-28 text-navy font-bold text-xs uppercase tracking-wider">In Stock</TableHead>
                       <TableHead className="w-32 text-navy font-bold text-xs uppercase tracking-wider">Qty</TableHead>
-                      <TableHead className="w-32 text-navy font-bold text-xs uppercase tracking-wider">Unit Price ($)</TableHead>
+                      <TableHead className="w-32 text-navy font-bold text-xs uppercase tracking-wider">Unit Price (₹)</TableHead>
                       <TableHead className="w-28 text-right text-navy font-bold text-xs uppercase tracking-wider">Subtotal</TableHead>
                       <TableHead className="w-10"></TableHead>
                     </TableRow>
@@ -274,7 +275,7 @@ export const SaleCreatePage = () => {
                             />
                           </TableCell>
                           <TableCell className="text-right text-xs font-mono font-bold text-navy py-2.5">
-                            ${(qty * price).toFixed(2)}
+                            {formatINR(qty * price)}
                           </TableCell>
                           <TableCell className="py-2.5">
                             {fields.length > 1 && (
@@ -300,7 +301,7 @@ export const SaleCreatePage = () => {
                 <div className="text-right bg-cream/40 border border-bluegray/30 rounded-md px-4 py-2">
                   <span className="text-xs font-semibold text-navy/70 uppercase tracking-wider mr-3">Order Total:</span>
                   <span className="text-lg font-bold font-mono text-navy">
-                    ${calculateTotal().toFixed(2)}
+                    {formatINR(calculateTotal())}
                   </span>
                 </div>
               </div>

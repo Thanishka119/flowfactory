@@ -113,3 +113,38 @@ export function requirePermission(permissionName: string) {
     }
   };
 }
+
+export function requireAdmin() {
+  return async (
+    req: AuthenticatedRequest,
+    _res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      if (!req.user) {
+        throw new AppError(
+          'Authentication required',
+          401,
+          'AUTHENTICATION_REQUIRED',
+        );
+      }
+
+      const role = await prisma.role.findUnique({
+        where: { id: req.user.roleId },
+        select: { name: true },
+      });
+
+      if (!role || role.name !== 'ADMIN') {
+        throw new AppError(
+          'Forbidden: Admin access required',
+          403,
+          'FORBIDDEN',
+        );
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+}

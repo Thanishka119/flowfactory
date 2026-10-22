@@ -2,12 +2,14 @@ import { createApp } from './app.js';
 import { env } from './config/env.js';
 import { logger } from './utils/logger.js';
 import { connectDatabase, disconnectDatabase } from './config/db.js';
+import { initAdditiveTables } from './config/dbInit.js';
 
 const app = createApp();
 
 const startServer = async () => {
   try {
     await connectDatabase();
+    await initAdditiveTables();
   } catch {
     logger.warn('⚠️ Server starting, but database connection could not be established immediately.');
   }
@@ -37,4 +39,3 @@ const startServer = async () => {
 };
 
 startServer();
-
