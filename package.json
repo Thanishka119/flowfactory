@@ -25,10 +25,6 @@
   ],
   "author": "FlowFactory Team",
   "license": "UNLICENSED",
-  "dependencies": {
-    "jsonwebtoken": "^9.0.3"
-  },
-  "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
