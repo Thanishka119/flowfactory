@@ -14,7 +14,10 @@ export function createApp(): Express {
   app.use(helmet());
 
   // CORS setup
-  const allowedOrigins = env.CORS_ORIGIN.split(',').map((origin) => origin.trim());
+  const allowedOrigins = [
+  ...env.CORS_ORIGIN.split(',').map((origin) => origin.trim()),
+  'https://flowfactory.onrender.com',
+];
   app.use(
     cors({
       origin: (origin, callback) => {
